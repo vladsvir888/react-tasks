@@ -3,6 +3,7 @@ import TopControls from './components/TopControls';
 import Results from './components/Results';
 import type { Character } from './types';
 import Skeleton from './components/Skeleton';
+import { cacheKey, cacheUtil } from './utils/local-storage';
 
 type State = {
   results: Character[] | null;
@@ -17,7 +18,10 @@ export default class App extends Component {
     error: undefined,
   };
   componentDidMount(): void {
-    this.fetchData();
+    const characterName = cacheUtil.get(
+      cacheKey.reactClassComponentsSearchTerm
+    );
+    this.fetchData(characterName);
   }
   fetchData = async (name?: string): Promise<void> => {
     try {

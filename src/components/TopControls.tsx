@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import SearchInput from './SearchInput';
 import SearchButton from './SearchButton';
+import { cacheKey, cacheUtil } from '../utils/local-storage';
 
 type Props = {
   fetchData: (name?: string) => Promise<void>;
@@ -12,11 +13,12 @@ type State = {
 
 export default class TopControls extends Component<Props, State> {
   state = {
-    query: '',
+    query: cacheUtil.get(cacheKey.reactClassComponentsSearchTerm) || '',
   };
   handleSubmit = (event: React.FormEvent): void => {
     event.preventDefault();
     this.props.fetchData(this.state.query);
+    cacheUtil.set(cacheKey.reactClassComponentsSearchTerm, this.state.query);
   };
   setQuery = (event: React.ChangeEvent<HTMLInputElement>): void => {
     this.setState({
@@ -27,6 +29,7 @@ export default class TopControls extends Component<Props, State> {
     this.setState({
       query: '',
     });
+    cacheUtil.remove(cacheKey.reactClassComponentsSearchTerm);
     this.props.fetchData();
   };
   render(): React.ReactNode {
