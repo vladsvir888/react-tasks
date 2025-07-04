@@ -17,11 +17,9 @@ export default class Results extends Component<Props> {
       <div className="results">
         <h1 className="text-3xl font-medium">Search results</h1>
         <ul className="flex flex-col gap-y-2 pt-2.5">
-          {list.map((item, index) => (
+          {list.map((item) => (
             <li key={item.id} className="flex gap-x-4">
-              <p className="font-bold">
-                {index + 1}. {item.name}
-              </p>
+              <p className="font-bold">{item.name}</p>
               <p>{item.description}</p>
             </li>
           ))}
