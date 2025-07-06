@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import type { Character } from '../types';
+import ResultsList from './ResultsList';
 
 type Props = {
   results: Character[];
@@ -16,14 +17,9 @@ export default class Results extends Component<Props> {
     return (
       <div className="results">
         <h1 className="text-3xl font-medium">Search results</h1>
-        <ul className="flex flex-col gap-y-2 pt-2.5">
-          {list.map((item) => (
-            <li key={item.id} className="flex gap-x-4">
-              <p className="font-bold">{item.name}</p>
-              <p>{item.description}</p>
-            </li>
-          ))}
-        </ul>
+        <div className="pt-2.5">
+          <ResultsList list={list} />
+        </div>
       </div>
     );
   }

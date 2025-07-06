@@ -52,14 +52,14 @@ export default class App extends Component {
       );
       const data = await response.json();
 
-      if (data.error) {
-        this.setState({
-          error: data.error,
-        });
-      } else {
+      if (data.results) {
         this.setState({
           results: data.results,
           info: data.info,
+        });
+      } else {
+        this.setState({
+          error: data.error || 'Oops, something went wrong.',
         });
       }
     } catch (error) {

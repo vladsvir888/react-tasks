@@ -12,7 +12,7 @@ type State = {
 };
 
 export default class TopControls extends Component<Props, State> {
-  state = {
+  state: State = {
     query: cacheUtil.get(cacheKey.reactClassComponentsSearchTerm) || '',
   };
   handleSubmit = (event: React.FormEvent): void => {
