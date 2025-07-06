@@ -5,6 +5,7 @@ import type { Character, Info } from './types';
 import Skeleton from './components/Skeleton';
 import { cacheKey, cacheUtil } from './utils/local-storage';
 import Pagination from './components/Pagination';
+import ErrorButton from './components/ErrorButton';
 
 type State = {
   results?: Character[];
@@ -12,6 +13,7 @@ type State = {
   error?: string;
   info?: Info;
   counter: number;
+  hasError: boolean;
 };
 
 export default class App extends Component {
@@ -21,6 +23,7 @@ export default class App extends Component {
     error: undefined,
     info: undefined,
     counter: 1,
+    hasError: false,
   };
   componentDidMount(): void {
     const name = cacheUtil.get(cacheKey.reactClassComponentsSearchTerm);
@@ -62,15 +65,29 @@ export default class App extends Component {
           error: data.error || 'Oops, something went wrong.',
         });
       }
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      console.log(err);
+      if (err instanceof Error) {
+        this.setState({
+          error: err.message,
+        });
+      }
     } finally {
       this.setState({
         loading: false,
       });
     }
   };
+  makeError = (): void => {
+    this.setState({
+      hasError: true,
+    });
+  };
   render(): React.ReactNode {
+    if (this.state.hasError) {
+      throw new Error('Error for catching in ErrorBoundary');
+    }
+
     const isEmptySearch = !cacheUtil.get(
       cacheKey.reactClassComponentsSearchTerm
     );
@@ -92,6 +109,7 @@ export default class App extends Component {
             {...this.state.info}
           />
         )}
+        <ErrorButton makeError={this.makeError} />
       </div>
     );
   }
