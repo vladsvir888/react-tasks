@@ -95,11 +95,11 @@ export default class App extends Component {
     return (
       <div className="p-2.5">
         <TopControls fetchData={this.fetchData} />
-        <div className="pt-2.5">
+        <section className="pt-2.5">
           {this.state.loading && <Skeleton />}
           {this.state.results && <Results results={this.state.results} />}
           {this.state.error && <p>{this.state.error}</p>}
-        </div>
+        </section>
         {isEmptySearch && this.state.info && (
           <Pagination
             fetchData={this.fetchData}
