@@ -2,13 +2,12 @@ import { Component } from 'react';
 import TopControls from './components/TopControls';
 import Results from './components/Results';
 import type { Character, Info } from './types';
-import Skeleton from './components/Skeleton';
 import { cacheKey, cacheUtil } from './utils/local-storage';
 import Pagination from './components/Pagination';
 import ErrorButton from './components/ErrorButton';
 
 type State = {
-  results?: Character[];
+  results: Character[];
   loading: boolean;
   error?: string;
   info?: Info;
@@ -18,7 +17,7 @@ type State = {
 
 export default class App extends Component {
   state: State = {
-    results: undefined,
+    results: [],
     loading: false,
     error: undefined,
     info: undefined,
@@ -42,7 +41,7 @@ export default class App extends Component {
   fetchData = async (name?: string, page?: number): Promise<void> => {
     try {
       this.setState({
-        results: undefined,
+        results: [],
         loading: true,
         error: undefined,
         info: undefined,
@@ -95,11 +94,11 @@ export default class App extends Component {
     return (
       <div className="p-2.5">
         <TopControls fetchData={this.fetchData} />
-        <section className="pt-2.5">
-          {this.state.loading && <Skeleton />}
-          {this.state.results && <Results results={this.state.results} />}
-          {this.state.error && <p>{this.state.error}</p>}
-        </section>
+        <Results
+          results={this.state.results}
+          loading={this.state.loading}
+          error={this.state.error}
+        />
         {isEmptySearch && this.state.info && (
           <Pagination
             fetchData={this.fetchData}
