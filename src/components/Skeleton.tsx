@@ -9,7 +9,7 @@ export default class Skeleton extends Component<Props> {
     return (
       <>
         {this.props.loading && (
-          <div className="animate-pulse w-[320px]">
+          <div className="skeleton animate-pulse w-[320px]">
             <div className="h-[700px] bg-slate-200 w-full rounded-sm" />
           </div>
         )}
