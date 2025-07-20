@@ -43,10 +43,11 @@ describe('Results', () => {
     const resultsElement = container.querySelector('.results');
     const listElementItems = resultsElement?.querySelectorAll('ul li');
     listElementItems?.forEach((item, index) => {
+      const dataItem = data[index];
       const nameElement = item.querySelector('p:first-child');
-      expect(nameElement?.textContent).toEqual(data[index].name);
+      expect(nameElement?.textContent).toEqual(dataItem.name);
       const descriptionElement = item.querySelector('p:last-child');
-      const description = `${data[index].gender}, ${data[index].species}, ${data[index].status}`;
+      const description = `${dataItem.gender}, ${dataItem.species}, ${dataItem.status}`;
       expect(descriptionElement?.textContent).toEqual(description);
     });
   });
