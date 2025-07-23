@@ -12,9 +12,11 @@ const item: CharacterSummary = {
 describe('ResultsItem', () => {
   it('displays item name and description correctly', () => {
     render(<ResultsItem {...item} />);
+
     const nameElement = screen.getByText(item.name);
-    const descriptionElement = screen.getByText(item.description);
     expect(nameElement).not.toBeNull();
+
+    const descriptionElement = screen.getByText(item.description);
     expect(descriptionElement).not.toBeNull();
   });
 });

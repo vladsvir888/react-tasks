@@ -76,16 +76,19 @@ describe('Main', () => {
       json: async () => mockData,
     });
     const { container } = render(<Main />);
+
+    const searchInputElement = container.querySelector(
+      '.search-input input'
+    ) as HTMLInputElement;
+    fireEvent.change(searchInputElement, { target: { value: searchQuery } });
+    expect(searchInputElement.value).toEqual(searchQuery);
+
+    const searchButtonElement = container.querySelector(
+      '.search-button'
+    ) as HTMLButtonElement;
+    fireEvent.click(searchButtonElement);
+
     await waitFor(() => {
-      const searchInputElement = container.querySelector(
-        '.search-input input'
-      ) as HTMLInputElement;
-      fireEvent.change(searchInputElement, { target: { value: searchQuery } });
-      expect(searchInputElement.value).toEqual(searchQuery);
-      const searchButtonElement = container.querySelector(
-        '.search-button'
-      ) as HTMLButtonElement;
-      fireEvent.click(searchButtonElement);
       expect(global.fetch).toHaveBeenCalledWith(
         `${import.meta.env.VITE_API_URL}/character/?name=${searchQuery}`
       );

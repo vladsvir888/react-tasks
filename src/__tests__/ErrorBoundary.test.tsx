@@ -7,9 +7,11 @@ const textWithoutError = 'Everything is fine.';
 
 describe('ErrorBoundary', () => {
   const realError = console.error;
+
   beforeEach(() => {
     console.error = vi.fn();
   });
+
   afterEach(() => {
     console.error = realError;
   });
@@ -20,6 +22,7 @@ describe('ErrorBoundary', () => {
         <p>{textWithoutError}</p>
       </ErrorBoundary>
     );
+
     expect(screen.getByText(textWithoutError)).not.toBeNull();
   });
 

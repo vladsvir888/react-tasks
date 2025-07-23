@@ -28,24 +28,29 @@ const noResultsMessage = 'no results';
 describe('Results', () => {
   it('renders correct number of items when data is provided', () => {
     const { container } = render(<Results results={data} loading={false} />);
+
     const listElementItems = container.querySelectorAll('.results ul li');
     expect(listElementItems.length).toEqual(data.length);
   });
 
   it(`displays ${noResultsMessage} message when data array is empty`, () => {
     render(<Results results={emptyData} loading={false} />);
+
     const noResultsElement = screen.getByText(noResultsMessage);
     expect(noResultsElement).not.toBeNull();
   });
 
   it('correctly displays item names and descriptions', () => {
     const { container } = render(<Results results={data} loading={false} />);
+
     const resultsElement = container.querySelector('.results');
     const listElementItems = resultsElement?.querySelectorAll('ul li');
     listElementItems?.forEach((item, index) => {
       const dataItem = data[index];
+
       const nameElement = item.querySelector('p:first-child');
       expect(nameElement?.textContent).toEqual(dataItem.name);
+
       const descriptionElement = item.querySelector('p:last-child');
       const description = `${dataItem.gender}, ${dataItem.species}, ${dataItem.status}`;
       expect(descriptionElement?.textContent).toEqual(description);
@@ -56,6 +61,7 @@ describe('Results', () => {
     const { container } = render(
       <Results results={emptyData} loading={true} />
     );
+
     const skeletonElement = container.querySelector('.results .skeleton');
     expect(skeletonElement).not.toBeNull();
   });
@@ -64,6 +70,7 @@ describe('Results', () => {
     render(
       <Results results={emptyData} loading={false} error={errorMessage} />
     );
+
     const errorMessageElement = screen.getByText(errorMessage);
     expect(errorMessageElement).not.toBeNull();
   });

@@ -5,6 +5,7 @@ import Skeleton from '../components/Skeleton';
 describe('Skeleton', () => {
   it('renders skeleton', () => {
     const { container } = render(<Skeleton loading={true} />);
+
     const skeletonElement = container.querySelector('.skeleton');
     expect(skeletonElement).not.toBeNull();
   });
