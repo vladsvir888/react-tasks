@@ -34,7 +34,7 @@ const mockDataError = {
 
 describe('Main', () => {
   beforeEach(() => {
-    global.fetch = vi.fn();
+    globalThis.fetch = vi.fn();
   });
 
   afterEach(() => {
@@ -42,7 +42,7 @@ describe('Main', () => {
   });
 
   it('fetches and displays results', async () => {
-    (global.fetch as Mock).mockResolvedValue({
+    (globalThis.fetch as Mock).mockResolvedValue({
       json: async () => mockData,
     });
 
@@ -57,7 +57,7 @@ describe('Main', () => {
   });
 
   it('fetches and displays error', async () => {
-    (global.fetch as Mock).mockResolvedValue({
+    (globalThis.fetch as Mock).mockResolvedValue({
       json: async () => mockDataError,
     });
 
@@ -72,7 +72,7 @@ describe('Main', () => {
   });
 
   it('calls api with correct name parameter', async () => {
-    (global.fetch as Mock).mockResolvedValue({
+    (globalThis.fetch as Mock).mockResolvedValue({
       json: async () => mockData,
     });
     const { container } = render(<Main />);
@@ -89,7 +89,7 @@ describe('Main', () => {
     fireEvent.click(searchButtonElement);
 
     await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith(
+      expect(globalThis.fetch).toHaveBeenCalledWith(
         `${import.meta.env.VITE_API_URL}/character/?name=${searchQuery}`
       );
     });
