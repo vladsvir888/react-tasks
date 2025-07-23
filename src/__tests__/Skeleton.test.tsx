@@ -7,6 +7,6 @@ describe('Skeleton', () => {
     const { container } = render(<Skeleton loading={true} />);
 
     const skeletonElement = container.querySelector('.skeleton');
-    expect(skeletonElement).not.toBeNull();
+    expect(skeletonElement).toBeInTheDocument();
   });
 });

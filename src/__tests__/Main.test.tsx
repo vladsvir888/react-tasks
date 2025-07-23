@@ -48,11 +48,11 @@ describe('Main', () => {
 
     const { container } = render(<Main />);
 
-    expect(container.querySelector('.skeleton')).not.toBeNull();
+    expect(container.querySelector('.skeleton')).toBeInTheDocument();
 
     await waitFor(() => {
-      expect(screen.getByText('Rick Sanchez')).not.toBeNull();
-      expect(container.querySelector('.pagination')).not.toBeNull();
+      expect(screen.getByText('Rick Sanchez')).toBeInTheDocument();
+      expect(container.querySelector('.pagination')).toBeInTheDocument();
     });
   });
 
@@ -63,11 +63,11 @@ describe('Main', () => {
 
     const { container } = render(<Main />);
 
-    expect(container.querySelector('.skeleton')).not.toBeNull();
+    expect(container.querySelector('.skeleton')).toBeInTheDocument();
 
     await waitFor(() => {
-      expect(screen.getByText('no results')).not.toBeNull();
-      expect(container.querySelector('.pagination')).toBeNull();
+      expect(screen.getByText('no results')).toBeInTheDocument();
+      expect(container.querySelector('.pagination')).not.toBeInTheDocument();
     });
   });
 

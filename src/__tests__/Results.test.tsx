@@ -37,7 +37,7 @@ describe('Results', () => {
     render(<Results results={emptyData} loading={false} />);
 
     const noResultsElement = screen.getByText(noResultsMessage);
-    expect(noResultsElement).not.toBeNull();
+    expect(noResultsElement).toBeInTheDocument();
   });
 
   it('correctly displays item names and descriptions', () => {
@@ -63,7 +63,7 @@ describe('Results', () => {
     );
 
     const skeletonElement = container.querySelector('.results .skeleton');
-    expect(skeletonElement).not.toBeNull();
+    expect(skeletonElement).toBeInTheDocument();
   });
 
   it('displays error message when API call fails', () => {
@@ -72,6 +72,6 @@ describe('Results', () => {
     );
 
     const errorMessageElement = screen.getByText(errorMessage);
-    expect(errorMessageElement).not.toBeNull();
+    expect(errorMessageElement).toBeInTheDocument();
   });
 });

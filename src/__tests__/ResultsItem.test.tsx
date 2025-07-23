@@ -14,9 +14,9 @@ describe('ResultsItem', () => {
     render(<ResultsItem {...item} />);
 
     const nameElement = screen.getByText(item.name);
-    expect(nameElement).not.toBeNull();
+    expect(nameElement).toBeInTheDocument();
 
     const descriptionElement = screen.getByText(item.description);
-    expect(descriptionElement).not.toBeNull();
+    expect(descriptionElement).toBeInTheDocument();
   });
 });

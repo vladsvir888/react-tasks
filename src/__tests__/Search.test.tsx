@@ -15,10 +15,10 @@ describe('Search', () => {
     const { container } = render(<Search fetchData={fetchData} />);
 
     const searchInputElement = container.querySelector('.search-input');
-    expect(searchInputElement).not.toBeNull();
+    expect(searchInputElement).toBeInTheDocument();
 
     const searchButtonElement = container.querySelector('.search-button');
-    expect(searchButtonElement).not.toBeNull();
+    expect(searchButtonElement).toBeInTheDocument();
   });
 
   it('displays previously saved search term from localStorage on mount', () => {

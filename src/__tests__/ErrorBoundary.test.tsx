@@ -23,7 +23,7 @@ describe('ErrorBoundary', () => {
       </ErrorBoundary>
     );
 
-    expect(screen.getByText(textWithoutError)).not.toBeNull();
+    expect(screen.getByText(textWithoutError)).toBeInTheDocument();
   });
 
   it('displays fallback UI when error occurs', () => {
@@ -36,6 +36,6 @@ describe('ErrorBoundary', () => {
     const errorButtonElement = screen.getByText('Make an error');
     fireEvent.click(errorButtonElement);
 
-    expect(screen.getByText('Oops, something went wrong.')).not.toBeNull();
+    expect(screen.getByText('Oops, something went wrong.')).toBeInTheDocument();
   });
 });

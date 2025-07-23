@@ -20,5 +20,6 @@ export default defineConfig({
         'src/**/*.d.ts',
       ],
     },
+    setupFiles: ['./setupTests.ts'],
   },
 });
