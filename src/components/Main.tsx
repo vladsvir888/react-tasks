@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useEffect, useState } from 'react';
 import Search from './Search';
 import Results from './Results';
 import type { Character, Info } from '../types';
@@ -6,46 +6,27 @@ import { cacheKey, cacheUtil } from '../utils/local-storage';
 import Pagination from './Pagination';
 import ErrorButton from './ErrorButton';
 
-type State = {
-  results: Character[];
-  loading: boolean;
-  error?: string;
-  info?: Info;
-  counter: number;
-  hasError: boolean;
-};
+const Main = () => {
+  const [results, setResults] = useState<Character[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string>();
+  const [info, setInfo] = useState<Info>();
+  const [counter, setCounter] = useState(1);
+  const [hasError, setHasError] = useState(false);
 
-export default class Main extends Component {
-  state: State = {
-    results: [],
-    loading: false,
-    error: undefined,
-    info: undefined,
-    counter: 1,
-    hasError: false,
+  const incrementCounter = (): void => {
+    setCounter(counter + 1);
   };
-  componentDidMount(): void {
-    const name = cacheUtil.get(cacheKey.reactClassComponentsSearchTerm);
-    this.fetchData(name);
-  }
-  incrementCounter = (): void => {
-    this.setState({
-      counter: this.state.counter + 1,
-    });
+  const decrementCounter = (): void => {
+    setCounter(counter - 1);
   };
-  decrementCounter = (): void => {
-    this.setState({
-      counter: this.state.counter - 1,
-    });
-  };
-  fetchData = async (name?: string, page?: number): Promise<void> => {
+
+  const fetchData = async (name?: string, page?: number): Promise<void> => {
     try {
-      this.setState({
-        results: [],
-        loading: true,
-        error: undefined,
-        info: undefined,
-      });
+      setResults([]);
+      setLoading(true);
+      setError(undefined);
+      setInfo(undefined);
 
       const queryName = `${name ? `?name=${name}` : ''}`;
       const queryPage = `${page ? `?page=${page}` : ''}`;
@@ -55,61 +36,52 @@ export default class Main extends Component {
       const data = await response.json();
 
       if (data.results) {
-        this.setState({
-          results: data.results,
-          info: data.info,
-        });
+        setResults(data.results);
+        setInfo(data.info);
       } else {
-        this.setState({
-          error: data.error || 'Oops, something went wrong.',
-        });
+        setError(data.error || 'Oops, something went wrong.');
       }
     } catch (err) {
       console.log(err);
       if (err instanceof Error) {
-        this.setState({
-          error: err.message,
-        });
+        setError(err.message);
       }
     } finally {
-      this.setState({
-        loading: false,
-      });
+      setLoading(false);
     }
   };
-  makeError = (): void => {
-    this.setState({
-      hasError: true,
-    });
+
+  const makeError = (): void => {
+    setHasError(true);
   };
-  render(): React.ReactNode {
-    if (this.state.hasError) {
-      throw new Error('Error for catching in ErrorBoundary');
-    }
 
-    const isEmptySearch = !cacheUtil.get(
-      cacheKey.reactClassComponentsSearchTerm
-    );
+  useEffect(() => {
+    const name = cacheUtil.get(cacheKey.reactClassComponentsSearchTerm);
+    fetchData(name);
+  }, []);
 
-    return (
-      <div className="p-2.5">
-        <Search fetchData={this.fetchData} />
-        <Results
-          results={this.state.results}
-          loading={this.state.loading}
-          error={this.state.error}
-        />
-        {isEmptySearch && this.state.info && (
-          <Pagination
-            fetchData={this.fetchData}
-            counter={this.state.counter}
-            incrementCounter={this.incrementCounter}
-            decrementCounter={this.decrementCounter}
-            {...this.state.info}
-          />
-        )}
-        <ErrorButton makeError={this.makeError} />
-      </div>
-    );
+  if (hasError) {
+    throw new Error('Error for catching in ErrorBoundary');
   }
-}
+
+  const isEmptySearch = !cacheUtil.get(cacheKey.reactClassComponentsSearchTerm);
+
+  return (
+    <div className="p-2.5">
+      <Search fetchData={fetchData} />
+      <Results results={results} loading={loading} error={error} />
+      {isEmptySearch && info && (
+        <Pagination
+          fetchData={fetchData}
+          counter={counter}
+          incrementCounter={incrementCounter}
+          decrementCounter={decrementCounter}
+          {...info}
+        />
+      )}
+      <ErrorButton makeError={makeError} />
+    </div>
+  );
+};
+
+export default Main;
