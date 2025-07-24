@@ -67,7 +67,7 @@ const Main = () => {
   const isEmptySearch = !cacheUtil.get(cacheKey.reactClassComponentsSearchTerm);
 
   return (
-    <div className="p-2.5">
+    <>
       <Search fetchData={fetchData} />
       <Results results={results} loading={loading} error={error} />
       {isEmptySearch && info && (
@@ -80,7 +80,7 @@ const Main = () => {
         />
       )}
       <ErrorButton makeError={makeError} />
-    </div>
+    </>
   );
 };
 
