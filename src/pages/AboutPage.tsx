@@ -1,6 +1,6 @@
 const AboutPage = () => {
   return (
-    <>
+    <div className="about">
       <h1>About me</h1>
       <p>Frontend developer | Passionate about tech | currently in Minsk</p>
       <a
@@ -11,7 +11,7 @@ const AboutPage = () => {
       >
         RS School React course
       </a>
-    </>
+    </div>
   );
 };
 

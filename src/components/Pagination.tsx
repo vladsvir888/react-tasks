@@ -4,11 +4,10 @@ import { Link, useLocation, useSearchParams } from 'react-router';
 type Props = Info;
 
 const Pagination = ({ prev, next, pages }: Props) => {
+  const { pathname } = useLocation();
   const [searchParams] = useSearchParams();
   const pageSearchParam = searchParams.get('page');
   const page = pageSearchParam ? +pageSearchParam : 1;
-
-  const { pathname } = useLocation();
 
   const createLink = (link: string) => {
     const url = new URL(link);

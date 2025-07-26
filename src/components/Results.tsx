@@ -16,15 +16,19 @@ const Results = ({ results, loading, error }: Props) => {
   }));
 
   if (loading) {
-    return <Skeleton loading={loading} />;
+    return (
+      <div className="pt-2.5">
+        <Skeleton loading={loading} />
+      </div>
+    );
   }
 
   if (error) {
-    return <p>{error}</p>;
+    return <p className="pt-2.5">{error}</p>;
   }
 
   if (!error && !list.length) {
-    return <p>no results</p>;
+    return <p className="pt-2.5">no results</p>;
   }
 
   return (

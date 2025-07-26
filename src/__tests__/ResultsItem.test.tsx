@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import ResultsItem from '../components/ResultsItem';
 import type { CharacterSummary } from '../types';
+import { BrowserRouter } from 'react-router';
 
 const item: CharacterSummary = {
   id: 1,
@@ -11,7 +12,11 @@ const item: CharacterSummary = {
 
 describe('ResultsItem', () => {
   it('displays item name and description correctly', () => {
-    render(<ResultsItem {...item} />);
+    render(
+      <BrowserRouter>
+        <ResultsItem {...item} />
+      </BrowserRouter>
+    );
 
     const nameElement = screen.getByText(item.name);
     expect(nameElement).toBeInTheDocument();

@@ -1,13 +1,18 @@
 type Props = {
   loading: boolean;
+  width?: number;
+  height?: number;
 };
 
-const Skeleton = ({ loading }: Props) => {
+const Skeleton = ({ loading, width = 320, height = 700 }: Props) => {
   return (
     <>
       {loading && (
-        <div className="skeleton animate-pulse w-[320px]">
-          <div className="h-[700px] bg-slate-200 w-full rounded-sm" />
+        <div className="skeleton animate-pulse" style={{ width: `${width}px` }}>
+          <div
+            className="bg-slate-200 w-full rounded-sm"
+            style={{ height: `${height}px` }}
+          />
         </div>
       )}
     </>

@@ -4,6 +4,7 @@ export type Character = {
   gender: string;
   species: string;
   status: string;
+  image: string;
 };
 
 export type CharacterSummary = Pick<Character, 'id' | 'name'> & {

@@ -46,11 +46,11 @@ const Main = () => {
   }, [searchParams]);
 
   return (
-    <>
+    <div className="main">
       <Search />
       <Results results={results} loading={loading} error={error} />
       {info && <Pagination {...info} />}
-    </>
+    </div>
   );
 };
 
