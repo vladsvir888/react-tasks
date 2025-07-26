@@ -2,20 +2,18 @@ import { useState } from 'react';
 import SearchInput from './SearchInput';
 import SearchButton from './SearchButton';
 import { cacheKey, cacheUtil } from '../utils/local-storage';
+import { useSearchParams } from 'react-router';
 
-type Props = {
-  fetchData: (name?: string) => Promise<void>;
-};
-
-const Search = ({ fetchData }: Props) => {
+const Search = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [query, setQuery] = useState(
     cacheUtil.get(cacheKey.reactClassComponentsSearchTerm) || ''
   );
 
   const handleSubmit = (event: React.FormEvent): void => {
     event.preventDefault();
-    fetchData(query);
     cacheUtil.set(cacheKey.reactClassComponentsSearchTerm, query);
+    setSearchParams({ name: query });
   };
 
   const handleQuery = (event: React.ChangeEvent<HTMLInputElement>): void => {
@@ -25,7 +23,9 @@ const Search = ({ fetchData }: Props) => {
   const resetQuery = (): void => {
     setQuery('');
     cacheUtil.remove(cacheKey.reactClassComponentsSearchTerm);
-    fetchData();
+    searchParams.delete('name');
+    searchParams.delete('page');
+    setSearchParams(searchParams);
   };
 
   return (

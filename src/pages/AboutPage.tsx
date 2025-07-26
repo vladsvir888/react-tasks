@@ -1,7 +1,8 @@
 const AboutPage = () => {
   return (
     <>
-      <h1>About me...</h1>
+      <h1>About me</h1>
+      <p>Frontend developer | Passionate about tech | currently in Minsk</p>
       <a
         href="https://rs.school/courses/reactjs"
         target="_blank"

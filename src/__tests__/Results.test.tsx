@@ -62,7 +62,7 @@ describe('Results', () => {
       <Results results={emptyData} loading={true} />
     );
 
-    const skeletonElement = container.querySelector('.results .skeleton');
+    const skeletonElement = container.querySelector('.skeleton');
     expect(skeletonElement).toBeInTheDocument();
   });
 

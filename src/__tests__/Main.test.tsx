@@ -9,6 +9,15 @@ import {
   type Mock,
 } from 'vitest';
 import Main from '../components/Main';
+import { BrowserRouter } from 'react-router';
+
+const MainWithRouter = () => {
+  return (
+    <BrowserRouter>
+      <Main />
+    </BrowserRouter>
+  );
+};
 
 const searchQuery = 'Rick';
 const mockData = {
@@ -46,7 +55,7 @@ describe('Main', () => {
       json: async () => mockData,
     });
 
-    const { container } = render(<Main />);
+    const { container } = render(<MainWithRouter />);
 
     expect(container.querySelector('.skeleton')).toBeInTheDocument();
 
@@ -61,12 +70,12 @@ describe('Main', () => {
       json: async () => mockDataError,
     });
 
-    const { container } = render(<Main />);
+    const { container } = render(<MainWithRouter />);
 
     expect(container.querySelector('.skeleton')).toBeInTheDocument();
 
     await waitFor(() => {
-      expect(screen.getByText('no results')).toBeInTheDocument();
+      expect(screen.getByText(mockDataError.error)).toBeInTheDocument();
       expect(container.querySelector('.pagination')).not.toBeInTheDocument();
     });
   });
@@ -75,7 +84,8 @@ describe('Main', () => {
     (globalThis.fetch as Mock).mockResolvedValue({
       json: async () => mockData,
     });
-    const { container } = render(<Main />);
+
+    const { container } = render(<MainWithRouter />);
 
     const searchInputElement = container.querySelector(
       '.search-input input'

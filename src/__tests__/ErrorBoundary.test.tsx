@@ -1,12 +1,15 @@
 import ErrorBoundary from '../ErrorBoundary';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import Main from '../components/Main';
 
 const textWithoutError = 'Everything is fine.';
 
 describe('ErrorBoundary', () => {
   const realError = console.error;
+
+  const ThrowError = () => {
+    throw new Error('Test');
+  };
 
   beforeEach(() => {
     console.error = vi.fn();
@@ -29,12 +32,9 @@ describe('ErrorBoundary', () => {
   it('displays fallback UI when error occurs', () => {
     render(
       <ErrorBoundary>
-        <Main />
+        <ThrowError />
       </ErrorBoundary>
     );
-
-    const errorButtonElement = screen.getByText('Make an error');
-    fireEvent.click(errorButtonElement);
 
     expect(screen.getByText('Oops, something went wrong.')).toBeInTheDocument();
   });

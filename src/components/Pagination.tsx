@@ -1,61 +1,40 @@
 import type { Info } from '../types';
+import { Link, useLocation, useSearchParams } from 'react-router';
 
-type Props = Info & {
-  fetchData: (name?: string, page?: number) => Promise<void>;
-  decrementCounter: () => void;
-  incrementCounter: () => void;
-  counter: number;
-};
+type Props = Info;
 
-const Pagination = ({
-  fetchData,
-  decrementCounter,
-  incrementCounter,
-  counter,
-  prev,
-  next,
-  pages,
-}: Props) => {
-  const handleClickPrev = async (page: number): Promise<void> => {
-    await fetchData(undefined, page);
-    decrementCounter();
+const Pagination = ({ prev, next, pages }: Props) => {
+  const [searchParams] = useSearchParams();
+  const pageSearchParam = searchParams.get('page');
+  const page = pageSearchParam ? +pageSearchParam : 1;
+
+  const { pathname } = useLocation();
+
+  const createLink = (link: string) => {
+    const url = new URL(link);
+    return `${pathname}${url.search}`;
   };
-
-  const handleClickNext = async (page: number): Promise<void> => {
-    await fetchData(undefined, page);
-    incrementCounter();
-  };
-  let nextPage: number;
-  let prevPage: number;
-
-  if (next) {
-    nextPage = +next.split('?page=')[1];
-  }
-
-  if (prev) {
-    prevPage = +prev.split('?page=')[1];
-  }
 
   return (
     <div className="pagination flex items-center gap-x-2 pt-2">
       {prev && (
-        <button
+        <Link
           className="cursor-pointer transition hover:text-slate-700"
-          onClick={() => handleClickPrev(prevPage)}
+          to={createLink(prev)}
         >
           Prev
-        </button>
+        </Link>
       )}
       <p>
-        {counter} of {pages}
+        {page} of {pages}
       </p>
       {next && (
-        <button
+        <Link
           className="cursor-pointer transition hover:text-slate-700"
-          onClick={() => handleClickNext(nextPage)}
+          to={createLink(next)}
         >
           Next
-        </button>
+        </Link>
       )}
     </div>
   );
