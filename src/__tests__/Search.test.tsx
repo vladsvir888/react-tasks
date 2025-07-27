@@ -120,4 +120,20 @@ describe('Search', () => {
     );
     expect(newValueFromLS).toEqual(`${searchQuery}${searchQuery}`);
   });
+
+  it('reset query when clicking clean button', () => {
+    const { container } = render(<SearchWithRouter />);
+
+    const searchInputElement = container.querySelector(
+      '.search-input input'
+    ) as HTMLInputElement;
+    fireEvent.change(searchInputElement, { target: { value: searchQuery } });
+    expect(searchInputElement.value).toEqual(searchQuery);
+
+    const cleanButton = container.querySelector(
+      '.search-input button'
+    ) as HTMLButtonElement;
+    fireEvent.click(cleanButton);
+    expect(searchInputElement.value).toEqual('');
+  });
 });

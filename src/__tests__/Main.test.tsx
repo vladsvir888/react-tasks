@@ -104,4 +104,16 @@ describe('Main', () => {
       );
     });
   });
+
+  it('handles fetch error successfully', async () => {
+    const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+
+    (globalThis.fetch as Mock).mockRejectedValue(new Error('Fetch failed'));
+
+    render(<MainWithRouter />);
+
+    await waitFor(() => {
+      expect(consoleSpy).toHaveBeenCalled();
+    });
+  });
 });
