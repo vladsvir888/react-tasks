@@ -2,11 +2,11 @@ export const cacheKey = {
   reactClassComponentsSearchTerm: 'reactClassComponentsSearchTerm',
 } as const;
 
-interface CacheValues {
+export interface CacheValues {
   [cacheKey.reactClassComponentsSearchTerm]: string;
 }
 
-type Keys = keyof typeof cacheKey;
+export type Keys = keyof typeof cacheKey;
 
 interface CacheUtil {
   set: <T extends Keys>(key: T, value: CacheValues[T]) => void;

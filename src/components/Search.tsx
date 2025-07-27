@@ -1,18 +1,22 @@
 import { useState } from 'react';
 import SearchInput from './SearchInput';
 import SearchButton from './SearchButton';
-import { cacheKey, cacheUtil } from '../utils/local-storage';
+import { cacheKey } from '../utils/local-storage';
 import { useSearchParams } from 'react-router';
+import useLocalStorage from '../hooks/useLocalStorage';
 
 const Search = () => {
+  const {
+    value: valueLS,
+    set: setInLS,
+    remove: removeFromLS,
+  } = useLocalStorage(cacheKey.reactClassComponentsSearchTerm);
   const [searchParams, setSearchParams] = useSearchParams();
-  const [query, setQuery] = useState(
-    cacheUtil.get(cacheKey.reactClassComponentsSearchTerm) || ''
-  );
+  const [query, setQuery] = useState(valueLS || '');
 
   const handleSubmit = (event: React.FormEvent): void => {
     event.preventDefault();
-    cacheUtil.set(cacheKey.reactClassComponentsSearchTerm, query);
+    setInLS(query);
     setSearchParams({ name: query });
   };
 
@@ -22,7 +26,7 @@ const Search = () => {
 
   const resetQuery = (): void => {
     setQuery('');
-    cacheUtil.remove(cacheKey.reactClassComponentsSearchTerm);
+    removeFromLS();
     searchParams.delete('name');
     searchParams.delete('page');
     setSearchParams(searchParams);
