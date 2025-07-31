@@ -5,7 +5,7 @@ import Skeleton from './Skeleton';
 type Props = {
   results: Character[];
   loading: boolean;
-  error?: string;
+  error?: string | null;
 };
 
 const Results = ({ results, loading, error }: Props) => {
@@ -27,7 +27,7 @@ const Results = ({ results, loading, error }: Props) => {
     return <p className="pt-2.5">{error}</p>;
   }
 
-  if (!error && !list.length) {
+  if (!list.length) {
     return <p className="pt-2.5">no results</p>;
   }
 
@@ -35,15 +35,13 @@ const Results = ({ results, loading, error }: Props) => {
     <div className="results pt-2.5">
       <h1 className="text-3xl font-medium">Search results</h1>
       <div className="pt-2.5">
-        {!!list.length && (
-          <ul className="flex flex-col gap-y-2">
-            {list.map((item) => (
-              <li key={item.id}>
-                <ResultsItem {...item} />
-              </li>
-            ))}
-          </ul>
-        )}
+        <ul className="flex flex-col gap-y-2">
+          {list.map((item) => (
+            <li key={item.id}>
+              <ResultsItem {...item} />
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );

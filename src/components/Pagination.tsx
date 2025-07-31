@@ -1,9 +1,7 @@
 import type { Info } from '../types';
 import { Link, useLocation, useSearchParams } from 'react-router';
 
-type Props = Info;
-
-const Pagination = ({ prev, next, pages }: Props) => {
+const Pagination = ({ prev, next, pages }: Info) => {
   const { pathname } = useLocation();
   const [searchParams] = useSearchParams();
   const pageSearchParam = searchParams.get('page');

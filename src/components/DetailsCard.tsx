@@ -1,15 +1,14 @@
-import { Link, useLocation } from 'react-router';
+import { Link } from 'react-router';
 import type { Character } from '../types';
 import Skeleton from './Skeleton';
 
 type Props = {
   data: Character | null;
   loading: boolean;
+  search: string;
 };
 
-const DetailsCard = ({ data, loading }: Props) => {
-  const { search } = useLocation();
-
+const DetailsCard = ({ data, loading, search }: Props) => {
   if (loading) {
     return <Skeleton loading={loading} width={300} height={400} />;
   }

@@ -1,6 +1,6 @@
 import { NavLink, type NavLinkRenderProps } from 'react-router';
 
-const items = [
+const menu = [
   {
     to: '/',
     text: 'Home',
@@ -18,7 +18,7 @@ const items = [
 const Navigation = () => {
   return (
     <nav className="flex gap-2 mb-2.5">
-      {items.map(({ to, text }) => (
+      {menu.map(({ to, text }) => (
         <NavLink
           key={text}
           to={to}

@@ -10,6 +10,7 @@ import {
 } from 'vitest';
 import Main from '../components/Main';
 import { BrowserRouter } from 'react-router';
+import { API_URL } from '../constants/config';
 
 const MainWithRouter = () => {
   return (
@@ -100,7 +101,7 @@ describe('Main', () => {
 
     await waitFor(() => {
       expect(globalThis.fetch).toHaveBeenCalledWith(
-        `${import.meta.env.VITE_API_URL}/character/?name=${searchQuery}`
+        `${API_URL}/character/?name=${searchQuery}`
       );
     });
   });
