@@ -9,6 +9,16 @@ import {
   type Mock,
 } from 'vitest';
 import Main from '../components/Main';
+import { BrowserRouter } from 'react-router';
+import { API_URL } from '../constants/config';
+
+const MainWithRouter = () => {
+  return (
+    <BrowserRouter>
+      <Main />
+    </BrowserRouter>
+  );
+};
 
 const searchQuery = 'Rick';
 const mockData = {
@@ -46,7 +56,7 @@ describe('Main', () => {
       json: async () => mockData,
     });
 
-    const { container } = render(<Main />);
+    const { container } = render(<MainWithRouter />);
 
     expect(container.querySelector('.skeleton')).toBeInTheDocument();
 
@@ -61,12 +71,12 @@ describe('Main', () => {
       json: async () => mockDataError,
     });
 
-    const { container } = render(<Main />);
+    const { container } = render(<MainWithRouter />);
 
     expect(container.querySelector('.skeleton')).toBeInTheDocument();
 
     await waitFor(() => {
-      expect(screen.getByText('no results')).toBeInTheDocument();
+      expect(screen.getByText(mockDataError.error)).toBeInTheDocument();
       expect(container.querySelector('.pagination')).not.toBeInTheDocument();
     });
   });
@@ -75,7 +85,8 @@ describe('Main', () => {
     (globalThis.fetch as Mock).mockResolvedValue({
       json: async () => mockData,
     });
-    const { container } = render(<Main />);
+
+    const { container } = render(<MainWithRouter />);
 
     const searchInputElement = container.querySelector(
       '.search-input input'
@@ -90,8 +101,20 @@ describe('Main', () => {
 
     await waitFor(() => {
       expect(globalThis.fetch).toHaveBeenCalledWith(
-        `${import.meta.env.VITE_API_URL}/character/?name=${searchQuery}`
+        `${API_URL}/character/?name=${searchQuery}`
       );
+    });
+  });
+
+  it('handles fetch error successfully', async () => {
+    const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+
+    (globalThis.fetch as Mock).mockRejectedValue(new Error('Fetch failed'));
+
+    render(<MainWithRouter />);
+
+    await waitFor(() => {
+      expect(consoleSpy).toHaveBeenCalled();
     });
   });
 });

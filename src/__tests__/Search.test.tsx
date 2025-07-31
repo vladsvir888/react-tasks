@@ -1,10 +1,18 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { fireEvent, render } from '@testing-library/react';
 import Search from '../components/Search';
 import { cacheKey, cacheUtil } from '../utils/local-storage';
+import { BrowserRouter } from 'react-router';
 
-const fetchData = vi.fn();
 const searchQuery = 'Rick';
+
+const SearchWithRouter = () => {
+  return (
+    <BrowserRouter>
+      <Search />
+    </BrowserRouter>
+  );
+};
 
 describe('Search', () => {
   beforeEach(() => {
@@ -12,7 +20,7 @@ describe('Search', () => {
   });
 
   it('renders search input and search button', () => {
-    const { container } = render(<Search fetchData={fetchData} />);
+    const { container } = render(<SearchWithRouter />);
 
     const searchInputElement = container.querySelector('.search-input');
     expect(searchInputElement).toBeInTheDocument();
@@ -25,7 +33,7 @@ describe('Search', () => {
     cacheUtil.set(cacheKey.reactClassComponentsSearchTerm, searchQuery);
     const valueFromLS = cacheUtil.get(cacheKey.reactClassComponentsSearchTerm);
 
-    const { container } = render(<Search fetchData={fetchData} />);
+    const { container } = render(<SearchWithRouter />);
 
     const searchInputElement = container.querySelector(
       '.search-input input'
@@ -37,7 +45,7 @@ describe('Search', () => {
     const valueFromLS = cacheUtil.get(cacheKey.reactClassComponentsSearchTerm);
     expect(valueFromLS).toEqual(null);
 
-    const { container } = render(<Search fetchData={fetchData} />);
+    const { container } = render(<SearchWithRouter />);
 
     const searchInputElement = container.querySelector(
       '.search-input input'
@@ -46,7 +54,7 @@ describe('Search', () => {
   });
 
   it('updates input value when user types', () => {
-    const { container } = render(<Search fetchData={fetchData} />);
+    const { container } = render(<SearchWithRouter />);
 
     const searchInputElement = container.querySelector(
       '.search-input input'
@@ -56,7 +64,7 @@ describe('Search', () => {
   });
 
   it('saves search term to localStorage when search button is clicked', () => {
-    const { container } = render(<Search fetchData={fetchData} />);
+    const { container } = render(<SearchWithRouter />);
 
     const searchInputElement = container.querySelector(
       '.search-input input'
@@ -74,7 +82,7 @@ describe('Search', () => {
   });
 
   it('trims whitespace from search input before saving', () => {
-    const { container } = render(<Search fetchData={fetchData} />);
+    const { container } = render(<SearchWithRouter />);
 
     const searchInputElement = container.querySelector(
       '.search-input input'
@@ -86,7 +94,7 @@ describe('Search', () => {
   });
 
   it('overwrites existing localStorage value when new search is performed', () => {
-    const { container } = render(<Search fetchData={fetchData} />);
+    const { container } = render(<SearchWithRouter />);
 
     const searchInputElement = container.querySelector(
       '.search-input input'
@@ -111,5 +119,21 @@ describe('Search', () => {
       cacheKey.reactClassComponentsSearchTerm
     );
     expect(newValueFromLS).toEqual(`${searchQuery}${searchQuery}`);
+  });
+
+  it('reset query when clicking clean button', () => {
+    const { container } = render(<SearchWithRouter />);
+
+    const searchInputElement = container.querySelector(
+      '.search-input input'
+    ) as HTMLInputElement;
+    fireEvent.change(searchInputElement, { target: { value: searchQuery } });
+    expect(searchInputElement.value).toEqual(searchQuery);
+
+    const cleanButton = container.querySelector(
+      '.search-input button'
+    ) as HTMLButtonElement;
+    fireEvent.click(cleanButton);
+    expect(searchInputElement.value).toEqual('');
   });
 });

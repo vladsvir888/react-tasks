@@ -1,4 +1,3 @@
-import { Component } from 'react';
 import type { Character } from '../types';
 import ResultsItem from './ResultsItem';
 import Skeleton from './Skeleton';
@@ -6,35 +5,46 @@ import Skeleton from './Skeleton';
 type Props = {
   results: Character[];
   loading: boolean;
-  error?: string;
+  error?: string | null;
 };
 
-export default class Results extends Component<Props> {
-  render(): React.ReactNode {
-    const list = this.props.results.map((item) => ({
-      id: item.id,
-      name: item.name,
-      description: `${item.gender}, ${item.species}, ${item.status}`,
-    }));
+const Results = ({ results, loading, error }: Props) => {
+  const list = results.map((item) => ({
+    id: item.id,
+    name: item.name,
+    description: `${item.gender}, ${item.species}, ${item.status}`,
+  }));
 
+  if (loading) {
     return (
-      <div className="results pt-2.5">
-        <h1 className="text-3xl font-medium">Search results</h1>
-        <div className="pt-2.5">
-          {this.props.loading && <Skeleton loading={this.props.loading} />}
-          {!!list.length && (
-            <ul className="flex flex-col gap-y-2">
-              {list.map((item) => (
-                <li key={item.id}>
-                  <ResultsItem {...item} />
-                </li>
-              ))}
-            </ul>
-          )}
-          {this.props.error && <p>{this.props.error}</p>}
-          {!this.props.error && !list.length && <p>no results</p>}
-        </div>
+      <div className="pt-2.5">
+        <Skeleton loading={loading} />
       </div>
     );
   }
-}
+
+  if (error) {
+    return <p className="pt-2.5">{error}</p>;
+  }
+
+  if (!list.length) {
+    return <p className="pt-2.5">no results</p>;
+  }
+
+  return (
+    <div className="results pt-2.5">
+      <h1 className="text-3xl font-medium">Search results</h1>
+      <div className="pt-2.5">
+        <ul className="flex flex-col gap-y-2">
+          {list.map((item) => (
+            <li key={item.id}>
+              <ResultsItem {...item} />
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+};
+
+export default Results;

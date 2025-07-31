@@ -1,52 +1,49 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import SearchInput from './SearchInput';
 import SearchButton from './SearchButton';
-import { cacheKey, cacheUtil } from '../utils/local-storage';
+import { cacheKey } from '../utils/local-storage';
+import { useSearchParams } from 'react-router';
+import useLocalStorage from '../hooks/useLocalStorage';
 
-type Props = {
-  fetchData: (name?: string) => Promise<void>;
-};
+const Search = () => {
+  const {
+    value: valueLS,
+    set: setInLS,
+    remove: removeFromLS,
+  } = useLocalStorage(cacheKey.reactClassComponentsSearchTerm);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [query, setQuery] = useState(valueLS || '');
 
-type State = {
-  query: string;
-};
-
-export default class TopControls extends Component<Props, State> {
-  state: State = {
-    query: cacheUtil.get(cacheKey.reactClassComponentsSearchTerm) || '',
-  };
-  handleSubmit = (event: React.FormEvent): void => {
+  const handleSubmit = (event: React.FormEvent): void => {
     event.preventDefault();
-    this.props.fetchData(this.state.query);
-    cacheUtil.set(cacheKey.reactClassComponentsSearchTerm, this.state.query);
+    setInLS(query);
+    setSearchParams({ name: query });
   };
-  setQuery = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    this.setState({
-      query: event.target.value.trim(),
-    });
+
+  const handleQuery = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    setQuery(event.target.value.trim());
   };
-  resetQuery = (): void => {
-    this.setState({
-      query: '',
-    });
-    cacheUtil.remove(cacheKey.reactClassComponentsSearchTerm);
-    this.props.fetchData();
+
+  const resetQuery = (): void => {
+    setQuery('');
+    removeFromLS();
+    searchParams.delete('name');
+    searchParams.delete('page');
+    setSearchParams(searchParams);
   };
-  render(): React.ReactNode {
-    return (
-      <div className="top-controls">
-        <form
-          className="flex items-center gap-x-2"
-          onSubmit={this.handleSubmit}
-        >
-          <SearchInput
-            query={this.state.query}
-            setQuery={this.setQuery}
-            resetQuery={this.resetQuery}
-          />
-          <SearchButton />
-        </form>
-      </div>
-    );
-  }
-}
+
+  return (
+    <div className="top-controls">
+      <form className="flex items-center gap-x-2" onSubmit={handleSubmit}>
+        <SearchInput
+          query={query}
+          setQuery={handleQuery}
+          resetQuery={resetQuery}
+        />
+        <SearchButton />
+      </form>
+    </div>
+  );
+};
+
+export default Search;

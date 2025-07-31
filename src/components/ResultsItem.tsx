@@ -1,15 +1,24 @@
-import { Component, type ReactNode } from 'react';
+import { Link, useLocation } from 'react-router';
 import type { CharacterSummary } from '../types';
 
 type Props = CharacterSummary;
 
-export default class ResultsItem extends Component<Props> {
-  render(): ReactNode {
-    return (
-      <div className="results-item flex flex-wrap gap-x-4 gap-y-1">
-        {this.props.name && <p className="font-bold">{this.props.name}</p>}
-        {this.props.description && <p>{this.props.description}</p>}
-      </div>
-    );
-  }
-}
+const ResultsItem = ({ id, name, description }: Props) => {
+  const { search } = useLocation();
+
+  return (
+    <div className="results-item flex flex-wrap gap-x-4 gap-y-1">
+      {name && (
+        <Link
+          to={`/details/${id}${search}`}
+          className="font-bold cursor-pointer transition hover:text-slate-700"
+        >
+          {name}
+        </Link>
+      )}
+      {description && <p>{description}</p>}
+    </div>
+  );
+};
+
+export default ResultsItem;

@@ -1,8 +1,22 @@
-import Main from './components/Main';
-import { Component } from 'react';
+import { Routes, Route } from 'react-router';
+import HomePage from './pages/HomePage';
+import AboutPage from './pages/AboutPage';
+import BaseLayout from './layouts/Base';
+import NotFoundPage from './pages/NotFoundPage';
+import DetailsPage from './pages/DetailsPage';
 
-export default class App extends Component {
-  render(): React.ReactNode {
-    return <Main />;
-  }
-}
+const App = () => {
+  return (
+    <Routes>
+      <Route element={<BaseLayout />}>
+        <Route path="/" element={<HomePage />}>
+          <Route path="details/:id" element={<DetailsPage />} />
+        </Route>
+        <Route path="/about" element={<AboutPage />} />
+      </Route>
+      <Route path="*" element={<NotFoundPage />} />
+    </Routes>
+  );
+};
+
+export default App;

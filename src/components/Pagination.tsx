@@ -1,56 +1,40 @@
-import { Component, type ReactNode } from 'react';
 import type { Info } from '../types';
+import { Link, useLocation, useSearchParams } from 'react-router';
 
-type Props = Info & {
-  fetchData: (name?: string, page?: number) => Promise<void>;
-  decrementCounter: () => void;
-  incrementCounter: () => void;
-  counter: number;
+const Pagination = ({ prev, next, pages }: Info) => {
+  const { pathname } = useLocation();
+  const [searchParams] = useSearchParams();
+  const pageSearchParam = searchParams.get('page');
+  const page = pageSearchParam ? +pageSearchParam : 1;
+
+  const createLink = (link: string) => {
+    const url = new URL(link);
+    return `${pathname}${url.search}`;
+  };
+
+  return (
+    <div className="pagination flex items-center gap-x-2 pt-2">
+      {prev && (
+        <Link
+          className="cursor-pointer transition hover:text-slate-700"
+          to={createLink(prev)}
+        >
+          Prev
+        </Link>
+      )}
+      <p>
+        {page} of {pages}
+      </p>
+      {next && (
+        <Link
+          className="cursor-pointer transition hover:text-slate-700"
+          to={createLink(next)}
+        >
+          Next
+        </Link>
+      )}
+    </div>
+  );
 };
 
-export default class Pagination extends Component<Props> {
-  handleClickPrev = async (page: number): Promise<void> => {
-    await this.props.fetchData(undefined, page);
-    this.props.decrementCounter();
-  };
-  handleClickNext = async (page: number): Promise<void> => {
-    await this.props.fetchData(undefined, page);
-    this.props.incrementCounter();
-  };
-  render(): ReactNode {
-    let nextPage: number;
-    let prevPage: number;
-
-    if (this.props.next) {
-      nextPage = +this.props.next.split('?page=')[1];
-    }
-
-    if (this.props.prev) {
-      prevPage = +this.props.prev.split('?page=')[1];
-    }
-
-    return (
-      <div className="pagination flex items-center gap-x-2 pt-2">
-        {this.props.prev && (
-          <button
-            className="cursor-pointer transition hover:text-slate-700"
-            onClick={() => this.handleClickPrev(prevPage)}
-          >
-            Prev
-          </button>
-        )}
-        <p>
-          {this.props.counter} of {this.props.pages}
-        </p>
-        {this.props.next && (
-          <button
-            className="cursor-pointer transition hover:text-slate-700"
-            onClick={() => this.handleClickNext(nextPage)}
-          >
-            Next
-          </button>
-        )}
-      </div>
-    );
-  }
-}
+export default Pagination;
