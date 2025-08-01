@@ -18,7 +18,7 @@ describe('DetailsCard', () => {
   it('displays details card correctly', () => {
     render(
       <BrowserRouter>
-        <DetailsCard data={item} loading={false} />
+        <DetailsCard data={item} loading={false} search="" />
       </BrowserRouter>
     );
 
@@ -32,7 +32,7 @@ describe('DetailsCard', () => {
   it('displays skeleton while data is loading', () => {
     const { container } = render(
       <BrowserRouter>
-        <DetailsCard data={null} loading={true} />
+        <DetailsCard data={null} loading={true} search="" />
       </BrowserRouter>
     );
 
@@ -42,7 +42,7 @@ describe('DetailsCard', () => {
   it(`displays message "${noDataMessage}" when no data`, () => {
     render(
       <BrowserRouter>
-        <DetailsCard data={null} loading={false} />
+        <DetailsCard data={null} loading={false} search="" />
       </BrowserRouter>
     );
 

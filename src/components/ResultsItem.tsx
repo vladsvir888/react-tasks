@@ -11,7 +11,7 @@ const ResultsItem = ({ id, name, description }: Props) => {
       {name && (
         <Link
           to={`/details/${id}${search}`}
-          className="font-bold cursor-pointer transition hover:text-slate-700"
+          className="font-bold cursor-pointer transition hover:text-slate-700 dark:hover:text-gray-300"
         >
           {name}
         </Link>

@@ -16,7 +16,7 @@ const SearchWithRouter = () => {
 
 describe('Search', () => {
   beforeEach(() => {
-    cacheUtil.remove(cacheKey.reactClassComponentsSearchTerm);
+    cacheUtil.remove(cacheKey.reactCourseSearchTerm);
   });
 
   it('renders search input and search button', () => {
@@ -30,8 +30,8 @@ describe('Search', () => {
   });
 
   it('displays previously saved search term from localStorage on mount', () => {
-    cacheUtil.set(cacheKey.reactClassComponentsSearchTerm, searchQuery);
-    const valueFromLS = cacheUtil.get(cacheKey.reactClassComponentsSearchTerm);
+    cacheUtil.set(cacheKey.reactCourseSearchTerm, searchQuery);
+    const valueFromLS = cacheUtil.get(cacheKey.reactCourseSearchTerm);
 
     const { container } = render(<SearchWithRouter />);
 
@@ -42,7 +42,7 @@ describe('Search', () => {
   });
 
   it('shows empty input when no saved term exists', () => {
-    const valueFromLS = cacheUtil.get(cacheKey.reactClassComponentsSearchTerm);
+    const valueFromLS = cacheUtil.get(cacheKey.reactCourseSearchTerm);
     expect(valueFromLS).toEqual(null);
 
     const { container } = render(<SearchWithRouter />);
@@ -77,7 +77,7 @@ describe('Search', () => {
     ) as HTMLButtonElement;
     fireEvent.click(searchButtonElement);
 
-    const valueFromLS = cacheUtil.get(cacheKey.reactClassComponentsSearchTerm);
+    const valueFromLS = cacheUtil.get(cacheKey.reactCourseSearchTerm);
     expect(valueFromLS).toEqual(searchQuery);
   });
 
@@ -107,7 +107,7 @@ describe('Search', () => {
     ) as HTMLButtonElement;
     fireEvent.click(searchButtonElement);
 
-    const valueFromLS = cacheUtil.get(cacheKey.reactClassComponentsSearchTerm);
+    const valueFromLS = cacheUtil.get(cacheKey.reactCourseSearchTerm);
     expect(valueFromLS).toEqual(searchQuery);
 
     fireEvent.change(searchInputElement, {
@@ -115,9 +115,7 @@ describe('Search', () => {
     });
     fireEvent.click(searchButtonElement);
 
-    const newValueFromLS = cacheUtil.get(
-      cacheKey.reactClassComponentsSearchTerm
-    );
+    const newValueFromLS = cacheUtil.get(cacheKey.reactCourseSearchTerm);
     expect(newValueFromLS).toEqual(`${searchQuery}${searchQuery}`);
   });
 

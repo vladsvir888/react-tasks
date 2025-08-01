@@ -10,7 +10,7 @@ const Search = () => {
     value: valueLS,
     set: setInLS,
     remove: removeFromLS,
-  } = useLocalStorage(cacheKey.reactClassComponentsSearchTerm);
+  } = useLocalStorage(cacheKey.reactCourseSearchTerm);
   const [searchParams, setSearchParams] = useSearchParams();
   const [query, setQuery] = useState(valueLS || '');
 

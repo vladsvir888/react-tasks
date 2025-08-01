@@ -26,7 +26,7 @@ const DetailsCard = ({ data, loading, search }: Props) => {
         <p>Species: {data.species}</p>
         <p>Status: {data.status}</p>
         <Link
-          className="cursor-pointer flex justify-end transition hover:text-slate-700"
+          className="cursor-pointer flex justify-end transition hover:text-slate-700 dark:hover:text-gray-300"
           to={`/${search}`}
         >
           Close
