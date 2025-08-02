@@ -38,7 +38,7 @@ const ThemeSwitcher = () => {
         <button
           key={item}
           aria-pressed={item === theme}
-          className="cursor-pointer py-1 px-2 aria-pressed:bg-slate-800  aria-pressed:rounded-lg aria-pressed:text-white"
+          className="cursor-pointer py-1 px-2 aria-pressed:bg-slate-800 dark:aria-pressed:bg-white aria-pressed:rounded-lg aria-pressed:text-white dark:aria-pressed:text-black"
           onClick={() => handleClick(item)}
         >
           {toUpperCaseFirstLetter(item)}

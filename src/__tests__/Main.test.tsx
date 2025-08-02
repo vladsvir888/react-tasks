@@ -11,11 +11,15 @@ import {
 import Main from '../components/Main';
 import { BrowserRouter } from 'react-router';
 import { API_URL } from '../constants/config';
+import { Provider } from 'react-redux';
+import store from '../store';
 
 const MainWithRouter = () => {
   return (
     <BrowserRouter>
-      <Main />
+      <Provider store={store}>
+        <Main />
+      </Provider>
     </BrowserRouter>
   );
 };

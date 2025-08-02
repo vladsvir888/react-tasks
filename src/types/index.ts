@@ -5,9 +5,10 @@ export type Character = {
   species: string;
   status: string;
   image: string;
+  url: string;
 };
 
-export type CharacterSummary = Pick<Character, 'id' | 'name'> & {
+export type CharacterSummary = Pick<Character, 'id' | 'name' | 'url'> & {
   description: string;
 };
 

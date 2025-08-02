@@ -27,6 +27,7 @@ const mockData: Character = {
   species: 'Human',
   gender: 'Male',
   image: 'https://rickandmortyapi.com/api/character/avatar/2.jpeg',
+  url: 'https://rickandmortyapi.com/api/character/2',
 };
 
 describe('DetailsPage', () => {
