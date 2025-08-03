@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { cacheKey, cacheUtil } from '../utils/local-storage';
-import { themeList } from '../components/theme/types';
-import ThemeSwitcher from '../components/theme/ThemeSwitcher';
-import ThemeProvider from '../components/theme/ThemeProvider';
+import { themeList } from '../constants/theme';
+import ThemeSwitcher from '../components/ThemeSwitcher';
+import ThemeProvider from '../providers/theme';
 
 const ThemeProviderWithSwitcher = () => {
   return (

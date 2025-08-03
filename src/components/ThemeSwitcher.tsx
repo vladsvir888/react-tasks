@@ -1,8 +1,9 @@
-import { useGetTheme } from './useGetTheme';
-import { themeList, type Theme } from './types';
+import { useGetTheme } from '../hooks/useGetTheme';
+import { type Theme } from '../types';
+import { themeList } from '../constants/theme';
 import { useEffect } from 'react';
-import useLocalStorage from '../../hooks/useLocalStorage';
-import { cacheKey } from '../../utils/local-storage';
+import useLocalStorage from '../hooks/useLocalStorage';
+import { cacheKey } from '../utils/local-storage';
 
 const ThemeSwitcher = () => {
   const { value: themeLS, set: setThemeLS } = useLocalStorage(

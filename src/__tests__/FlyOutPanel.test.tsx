@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import ResultsItem from '../components/ResultsItem';
 import type { CharacterSummaryWithChecked } from '../types';
 import { BrowserRouter } from 'react-router';
-import { Provider } from 'react-redux';
+import ReduxProvider from '../providers/redux';
 import FlyOutPanel from '../components/FlyOutPanel';
 import store from '../store';
 
@@ -17,15 +17,19 @@ describe('FlyOutPanel', () => {
   };
   const mockLink = 'link';
 
-  it('should render FlyOutPanel', () => {
-    render(
+  const TestWrapper = () => {
+    return (
       <BrowserRouter>
-        <Provider store={store}>
+        <ReduxProvider>
           <ResultsItem {...item} />
           <FlyOutPanel />
-        </Provider>
+        </ReduxProvider>
       </BrowserRouter>
     );
+  };
+
+  it('should render FlyOutPanel', () => {
+    render(<TestWrapper />);
 
     const checkbox = screen.getByRole('checkbox');
 
@@ -43,14 +47,7 @@ describe('FlyOutPanel', () => {
   });
 
   it('should unselect all on click button', () => {
-    render(
-      <BrowserRouter>
-        <Provider store={store}>
-          <ResultsItem {...item} />
-          <FlyOutPanel />
-        </Provider>
-      </BrowserRouter>
-    );
+    render(<TestWrapper />);
 
     const checkbox = screen.getByRole('checkbox');
     fireEvent.click(checkbox);
@@ -66,14 +63,7 @@ describe('FlyOutPanel', () => {
   it('should generate link on click button', () => {
     globalThis.URL.createObjectURL = vi.fn().mockReturnValue(mockLink);
 
-    render(
-      <BrowserRouter>
-        <Provider store={store}>
-          <ResultsItem {...item} />
-          <FlyOutPanel />
-        </Provider>
-      </BrowserRouter>
-    );
+    render(<TestWrapper />);
 
     const checkbox = screen.getByRole('checkbox');
     fireEvent.click(checkbox);

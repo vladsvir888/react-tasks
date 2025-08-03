@@ -1,4 +1,4 @@
-import type { Theme } from '../components/theme/types';
+import type { Theme } from '../types';
 
 export const cacheKey = {
   reactCourseSearchTerm: 'reactCourseSearchTerm',

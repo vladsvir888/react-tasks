@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import ResultsItem from '../components/ResultsItem';
 import type { CharacterSummary, CharacterSummaryWithChecked } from '../types';
 import { BrowserRouter } from 'react-router';
-import { Provider } from 'react-redux';
+import ReduxProvider from '../providers/redux';
 import store from '../store';
 
 const item: CharacterSummary = {
@@ -13,15 +13,19 @@ const item: CharacterSummary = {
   url: 'https://rickandmortyapi.com/api/character/1',
 };
 
+const TestWrapper = () => {
+  return (
+    <BrowserRouter>
+      <ReduxProvider>
+        <ResultsItem {...item} />
+      </ReduxProvider>
+    </BrowserRouter>
+  );
+};
+
 describe('ResultsItem', () => {
   it('displays item name and description correctly', () => {
-    render(
-      <BrowserRouter>
-        <Provider store={store}>
-          <ResultsItem {...item} />
-        </Provider>
-      </BrowserRouter>
-    );
+    render(<TestWrapper />);
 
     const nameElement = screen.getByText(item.name);
     expect(nameElement).toBeInTheDocument();
@@ -31,13 +35,7 @@ describe('ResultsItem', () => {
   });
 
   it('should handle checkbox', () => {
-    render(
-      <BrowserRouter>
-        <Provider store={store}>
-          <ResultsItem {...item} />
-        </Provider>
-      </BrowserRouter>
-    );
+    render(<TestWrapper />);
 
     const checkbox = screen.getByRole('checkbox');
 

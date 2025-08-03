@@ -4,19 +4,18 @@ import './index.css';
 import App from './App.tsx';
 import ErrorBoundary from './ErrorBoundary.tsx';
 import { BrowserRouter } from 'react-router';
-import ThemeProvider from './components/theme/ThemeProvider.tsx';
-import { Provider } from 'react-redux';
-import store from './store/index.ts';
+import ThemeProvider from './providers/theme.tsx';
+import ReduxProvider from './providers/redux.tsx';
 
 createRoot(document.getElementById('root') as HTMLDivElement).render(
   <StrictMode>
     <ErrorBoundary>
       <BrowserRouter>
-        <Provider store={store}>
+        <ReduxProvider>
           <ThemeProvider>
             <App />
           </ThemeProvider>
-        </Provider>
+        </ReduxProvider>
       </BrowserRouter>
     </ErrorBoundary>
   </StrictMode>

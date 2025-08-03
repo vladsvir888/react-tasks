@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router';
 import Navigation from '../components/Navigation';
-import ThemeSwitcher from '../components/theme/ThemeSwitcher';
+import ThemeSwitcher from '../components/ThemeSwitcher';
 import FlyOutPanel from '../components/FlyOutPanel';
 
 const BaseLayout = () => {

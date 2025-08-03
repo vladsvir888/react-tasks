@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { ThemeContext } from './ThemeContext';
-import { type Theme } from './types';
+import { ThemeContext } from '../contexts/theme';
+import { type Theme } from '../types';
 
 type Props = {
   children: React.ReactNode;

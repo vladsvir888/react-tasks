@@ -3,8 +3,7 @@ import { render, screen } from '@testing-library/react';
 import type { Character } from '../types';
 import Results from '../components/Results';
 import { BrowserRouter } from 'react-router';
-import { Provider } from 'react-redux';
-import store from '../store';
+import ReduxProvider from '../providers/redux';
 
 const data: Character[] = [
   {
@@ -36,9 +35,9 @@ describe('Results', () => {
   it('renders correct number of items when data is provided', () => {
     const { container } = render(
       <BrowserRouter>
-        <Provider store={store}>
+        <ReduxProvider>
           <Results results={data} loading={false} />
-        </Provider>
+        </ReduxProvider>
       </BrowserRouter>
     );
 
@@ -49,9 +48,9 @@ describe('Results', () => {
   it(`displays ${noResultsMessage} message when data array is empty`, () => {
     render(
       <BrowserRouter>
-        <Provider store={store}>
+        <ReduxProvider>
           <Results results={emptyData} loading={false} />
-        </Provider>
+        </ReduxProvider>
       </BrowserRouter>
     );
 
@@ -62,9 +61,9 @@ describe('Results', () => {
   it('correctly displays item names and descriptions', () => {
     const { container } = render(
       <BrowserRouter>
-        <Provider store={store}>
+        <ReduxProvider>
           <Results results={data} loading={false} />
-        </Provider>
+        </ReduxProvider>
       </BrowserRouter>
     );
 
@@ -85,9 +84,9 @@ describe('Results', () => {
   it('shows loading state while fetching data', () => {
     const { container } = render(
       <BrowserRouter>
-        <Provider store={store}>
+        <ReduxProvider>
           <Results results={emptyData} loading={true} />
-        </Provider>
+        </ReduxProvider>
       </BrowserRouter>
     );
 
@@ -98,9 +97,9 @@ describe('Results', () => {
   it('displays error message when API call fails', () => {
     render(
       <BrowserRouter>
-        <Provider store={store}>
+        <ReduxProvider>
           <Results results={emptyData} loading={false} error={errorMessage} />
-        </Provider>
+        </ReduxProvider>
       </BrowserRouter>
     );
 
