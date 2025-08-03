@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { ThemeContext } from './ThemeContext';
-import { themeList, type Theme } from './types';
+import { type Theme } from './types';
 
 type Props = {
   children: React.ReactNode;
 };
 
 const ThemeProvider = ({ children }: Props) => {
-  const [theme, setTheme] = useState<Theme>(themeList.light);
+  const [theme, setTheme] = useState<Theme | null>(null);
 
   return <ThemeContext value={{ theme, setTheme }}>{children}</ThemeContext>;
 };

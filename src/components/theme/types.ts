@@ -5,6 +5,6 @@ export const themeList = {
 
 export type Theme = keyof typeof themeList;
 export type ComplexTheme = {
-  theme: Theme;
-  setTheme: React.Dispatch<React.SetStateAction<Theme>>;
+  theme: Theme | null;
+  setTheme: React.Dispatch<React.SetStateAction<Theme | null>>;
 };

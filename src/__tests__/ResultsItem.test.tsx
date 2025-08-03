@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import ResultsItem from '../components/ResultsItem';
-import type { CharacterSummary } from '../types';
+import type { CharacterSummary, CharacterSummaryWithChecked } from '../types';
 import { BrowserRouter } from 'react-router';
 import { Provider } from 'react-redux';
 import store from '../store';
@@ -28,5 +28,31 @@ describe('ResultsItem', () => {
 
     const descriptionElement = screen.getByText(item.description);
     expect(descriptionElement).toBeInTheDocument();
+  });
+
+  it('should handle checkbox', () => {
+    render(
+      <BrowserRouter>
+        <Provider store={store}>
+          <ResultsItem {...item} />
+        </Provider>
+      </BrowserRouter>
+    );
+
+    const checkbox = screen.getByRole('checkbox');
+
+    fireEvent.click(checkbox);
+
+    expect(checkbox).toBeChecked();
+    const itemWithChecked: CharacterSummaryWithChecked = {
+      ...item,
+      checked: true,
+    };
+    expect(store.getState().favorite.items[0]).toEqual(itemWithChecked);
+
+    fireEvent.click(checkbox);
+
+    expect(checkbox).not.toBeChecked();
+    expect(store.getState().favorite.items.length).toEqual(0);
   });
 });

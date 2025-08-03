@@ -1,16 +1,12 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import type { CharacterSummary } from '../types';
+import type { CharacterSummary, CharacterSummaryWithChecked } from '../types';
 
-type CharacterSummaryWithChecked = CharacterSummary & {
-  checked: boolean;
-};
-
-type State = {
+export type FavoriteState = {
   items: CharacterSummaryWithChecked[];
   downloadLink?: string;
 };
 
-const initialState: State = {
+const initialState: FavoriteState = {
   items: [],
   downloadLink: undefined,
 };

@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../store';
 import {
   createDownloadFavoriteLink,
@@ -11,10 +10,6 @@ const FlyOutPanel = () => {
   const count = useAppSelector(selectFavoriteItemsCount);
   const link = useAppSelector(selectFavoriteDownloadLink);
   const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    dispatch(createDownloadFavoriteLink());
-  }, [count, dispatch]);
 
   if (!count) {
     return null;
@@ -35,6 +30,9 @@ const FlyOutPanel = () => {
           href={link}
           className="cursor-pointer bg-black dark:bg-white hover:bg-slate-200 px-3 py-1 text-white dark:text-black hover:text-black rounded-md transition"
           download={`${count}_items.csv`}
+          onClick={() => {
+            dispatch(createDownloadFavoriteLink());
+          }}
         >
           Download
         </a>

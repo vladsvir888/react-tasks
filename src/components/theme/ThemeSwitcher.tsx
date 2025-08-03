@@ -9,28 +9,31 @@ const ThemeSwitcher = () => {
     cacheKey.reactCourseTheme
   );
   const { theme, setTheme } = useGetTheme();
+
   const preparedThemeList = Object.keys(themeList) as Theme[];
 
-  const handleClick = (item: Theme) => {
-    setTheme(item);
-    setThemeLS(item);
-    document.documentElement.classList.remove(themeList.light, themeList.dark);
-    document.documentElement.classList.add(item);
-  };
-
-  const toUpperCaseFirstLetter = (item: string) => {
+  const toUpperCaseFirstLetter = (item: Theme) => {
     return item[0].toUpperCase() + item.slice(1);
   };
 
   useEffect(() => {
-    if (themeLS) {
+    if (theme) {
+      setThemeLS(theme);
+      document.documentElement.classList.remove(
+        themeList.light,
+        themeList.dark
+      );
+      document.documentElement.classList.add(theme);
+    } else if (themeLS) {
       setTheme(themeLS);
-      document.documentElement.classList.add(themeLS);
-    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      setTheme(themeList.dark);
-      document.documentElement.classList.add(themeList.dark);
+    } else {
+      const preferredTheme = window.matchMedia('(prefers-color-scheme: dark)')
+        .matches
+        ? themeList.dark
+        : themeList.light;
+      setTheme(preferredTheme);
     }
-  }, []);
+  }, [theme]);
 
   return (
     <div className="theme-switcher border rounded-lg px-2 py-1">
@@ -39,7 +42,7 @@ const ThemeSwitcher = () => {
           key={item}
           aria-pressed={item === theme}
           className="cursor-pointer py-1 px-2 aria-pressed:bg-slate-800 dark:aria-pressed:bg-white aria-pressed:rounded-lg aria-pressed:text-white dark:aria-pressed:text-black"
-          onClick={() => handleClick(item)}
+          onClick={() => setTheme(item)}
         >
           {toUpperCaseFirstLetter(item)}
         </button>
