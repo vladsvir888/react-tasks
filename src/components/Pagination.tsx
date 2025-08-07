@@ -16,7 +16,7 @@ const Pagination = ({ prev, next, pages }: Info) => {
     <div className="pagination flex items-center gap-x-2 pt-2">
       {prev && (
         <Link
-          className="cursor-pointer transition hover:text-slate-700"
+          className="cursor-pointer transition hover:text-slate-700 dark:hover:text-gray-300"
           to={createLink(prev)}
         >
           Prev
@@ -27,7 +27,7 @@ const Pagination = ({ prev, next, pages }: Info) => {
       </p>
       {next && (
         <Link
-          className="cursor-pointer transition hover:text-slate-700"
+          className="cursor-pointer transition hover:text-slate-700 dark:hover:text-gray-300"
           to={createLink(next)}
         >
           Next

@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react';
 import type { Character } from '../types';
 import Results from '../components/Results';
 import { BrowserRouter } from 'react-router';
+import ReduxProvider from '../providers/redux';
 
 const data: Character[] = [
   {
@@ -11,7 +12,8 @@ const data: Character[] = [
     gender: 'Male',
     species: 'Human',
     status: 'Alive',
-    image: 'https://rickandmortyapi.com/api/character/avatar/2.jpeg',
+    image: 'https://rickandmortyapi.com/api/character/avatar/1.jpeg',
+    url: 'https://rickandmortyapi.com/api/character/1',
   },
   {
     id: 2,
@@ -20,6 +22,7 @@ const data: Character[] = [
     species: 'Human',
     status: 'Alive',
     image: 'https://rickandmortyapi.com/api/character/avatar/2.jpeg',
+    url: 'https://rickandmortyapi.com/api/character/2',
   },
 ];
 
@@ -32,7 +35,9 @@ describe('Results', () => {
   it('renders correct number of items when data is provided', () => {
     const { container } = render(
       <BrowserRouter>
-        <Results results={data} loading={false} />
+        <ReduxProvider>
+          <Results results={data} loading={false} />
+        </ReduxProvider>
       </BrowserRouter>
     );
 
@@ -41,7 +46,13 @@ describe('Results', () => {
   });
 
   it(`displays ${noResultsMessage} message when data array is empty`, () => {
-    render(<Results results={emptyData} loading={false} />);
+    render(
+      <BrowserRouter>
+        <ReduxProvider>
+          <Results results={emptyData} loading={false} />
+        </ReduxProvider>
+      </BrowserRouter>
+    );
 
     const noResultsElement = screen.getByText(noResultsMessage);
     expect(noResultsElement).toBeInTheDocument();
@@ -50,7 +61,9 @@ describe('Results', () => {
   it('correctly displays item names and descriptions', () => {
     const { container } = render(
       <BrowserRouter>
-        <Results results={data} loading={false} />
+        <ReduxProvider>
+          <Results results={data} loading={false} />
+        </ReduxProvider>
       </BrowserRouter>
     );
 
@@ -71,7 +84,9 @@ describe('Results', () => {
   it('shows loading state while fetching data', () => {
     const { container } = render(
       <BrowserRouter>
-        <Results results={emptyData} loading={true} />
+        <ReduxProvider>
+          <Results results={emptyData} loading={true} />
+        </ReduxProvider>
       </BrowserRouter>
     );
 
@@ -82,7 +97,9 @@ describe('Results', () => {
   it('displays error message when API call fails', () => {
     render(
       <BrowserRouter>
-        <Results results={emptyData} loading={false} error={errorMessage} />
+        <ReduxProvider>
+          <Results results={emptyData} loading={false} error={errorMessage} />
+        </ReduxProvider>
       </BrowserRouter>
     );
 

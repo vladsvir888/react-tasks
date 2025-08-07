@@ -13,7 +13,7 @@ const SearchInput = ({ query, setQuery, resetQuery }: Props) => {
         name="q"
         type="text"
         placeholder="Search..."
-        className="border-slate-300 border rounded-md pl-2 pr-5 py-1"
+        className="border-slate-300 border rounded-md pl-2 pr-5 py-1 placeholder-slate-400 dark:placeholder-slate-100"
         required
         value={query}
         onChange={setQuery}

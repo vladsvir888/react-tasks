@@ -1,9 +1,13 @@
+import type { Theme } from '../types';
+
 export const cacheKey = {
-  reactClassComponentsSearchTerm: 'reactClassComponentsSearchTerm',
+  reactCourseSearchTerm: 'reactCourseSearchTerm',
+  reactCourseTheme: 'reactCourseTheme',
 } as const;
 
 export interface CacheValues {
-  [cacheKey.reactClassComponentsSearchTerm]: string;
+  [cacheKey.reactCourseSearchTerm]: string;
+  [cacheKey.reactCourseTheme]: Theme;
 }
 
 export type Keys = keyof typeof cacheKey;

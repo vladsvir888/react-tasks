@@ -12,6 +12,7 @@ const Results = ({ results, loading, error }: Props) => {
   const list = results.map((item) => ({
     id: item.id,
     name: item.name,
+    url: item.url,
     description: `${item.gender}, ${item.species}, ${item.status}`,
   }));
 

@@ -11,11 +11,14 @@ import {
 import Main from '../components/Main';
 import { BrowserRouter } from 'react-router';
 import { API_URL } from '../constants/config';
+import ReduxProvider from '../providers/redux';
 
-const MainWithRouter = () => {
+const TestWrapper = () => {
   return (
     <BrowserRouter>
-      <Main />
+      <ReduxProvider>
+        <Main />
+      </ReduxProvider>
     </BrowserRouter>
   );
 };
@@ -56,7 +59,7 @@ describe('Main', () => {
       json: async () => mockData,
     });
 
-    const { container } = render(<MainWithRouter />);
+    const { container } = render(<TestWrapper />);
 
     expect(container.querySelector('.skeleton')).toBeInTheDocument();
 
@@ -71,7 +74,7 @@ describe('Main', () => {
       json: async () => mockDataError,
     });
 
-    const { container } = render(<MainWithRouter />);
+    const { container } = render(<TestWrapper />);
 
     expect(container.querySelector('.skeleton')).toBeInTheDocument();
 
@@ -86,7 +89,7 @@ describe('Main', () => {
       json: async () => mockData,
     });
 
-    const { container } = render(<MainWithRouter />);
+    const { container } = render(<TestWrapper />);
 
     const searchInputElement = container.querySelector(
       '.search-input input'
@@ -111,7 +114,7 @@ describe('Main', () => {
 
     (globalThis.fetch as Mock).mockRejectedValue(new Error('Fetch failed'));
 
-    render(<MainWithRouter />);
+    render(<TestWrapper />);
 
     await waitFor(() => {
       expect(consoleSpy).toHaveBeenCalled();
