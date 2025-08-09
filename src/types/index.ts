@@ -23,6 +23,12 @@ export type Info = {
   prev: string | null;
 };
 
+export type Data<T> = {
+  results: T;
+  info: Info;
+  error?: string;
+};
+
 export type Theme = keyof typeof themeList;
 export type ComplexTheme = {
   theme: Theme | null;

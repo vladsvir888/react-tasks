@@ -1,19 +1,11 @@
 import Search from './Search';
 import Results from './Results';
-import type { Character, Info } from '../types';
 import Pagination from './Pagination';
 import { useSearchParams } from 'react-router';
-import { API_URL } from '../constants/config';
-import useFetch from '../hooks/useFetch';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { cacheKey } from '../utils/local-storage';
 import { useEffect } from 'react';
-
-type Data = {
-  results: Character[];
-  info: Info;
-  error?: string;
-};
+import { useGetCharacterQuery } from '../store/api';
 
 const Main = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -27,8 +19,8 @@ const Main = () => {
     }
   }, []);
 
-  const { data, loading, error } = useFetch<Data>(
-    `${API_URL}/character/?${searchParams.toString()}`
+  const { data, isFetching, error } = useGetCharacterQuery(
+    searchParams.toString()
   );
 
   return (
@@ -36,7 +28,7 @@ const Main = () => {
       <Search />
       <Results
         results={data?.results || []}
-        loading={loading}
+        loading={isFetching}
         error={data?.error || error}
       />
       {data?.info && <Pagination {...data.info} />}

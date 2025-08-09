@@ -3,17 +3,18 @@ import type { Character } from '../types';
 import Skeleton from './Skeleton';
 
 type Props = {
-  data: Character | null;
+  data?: Character | null;
   loading: boolean;
   search: string;
+  error: unknown;
 };
 
-const DetailsCard = ({ data, loading, search }: Props) => {
+const DetailsCard = ({ data, loading, search, error }: Props) => {
   if (loading) {
     return <Skeleton loading={loading} width={300} height={400} />;
   }
 
-  if (!data) {
+  if (!data || error) {
     return <p>No character</p>;
   }
 
