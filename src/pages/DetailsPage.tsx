@@ -5,7 +5,9 @@ import { useGetCharacterByIdQuery } from '../store/api';
 const DetailsPage = () => {
   const { id } = useParams();
   const { search } = useLocation();
-  const { data, error, isFetching } = useGetCharacterByIdQuery(id ?? '');
+  const { data, error, isFetching, refetch } = useGetCharacterByIdQuery(
+    id ?? ''
+  );
 
   return (
     <DetailsCard
@@ -13,6 +15,7 @@ const DetailsPage = () => {
       loading={isFetching}
       search={search}
       error={error}
+      refetch={refetch}
     />
   );
 };

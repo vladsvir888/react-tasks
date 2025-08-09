@@ -1,15 +1,17 @@
 import { Link } from 'react-router';
 import type { Character } from '../types';
 import Skeleton from './Skeleton';
+import RefreshButton from './RefreshButton';
 
 type Props = {
   data?: Character | null;
   loading: boolean;
   search: string;
   error: unknown;
+  refetch: () => unknown;
 };
 
-const DetailsCard = ({ data, loading, search, error }: Props) => {
+const DetailsCard = ({ data, loading, search, error, refetch }: Props) => {
   if (loading) {
     return <Skeleton loading={loading} width={300} height={400} />;
   }
@@ -26,12 +28,15 @@ const DetailsCard = ({ data, loading, search, error }: Props) => {
         <p>Gender: {data.gender}</p>
         <p>Species: {data.species}</p>
         <p>Status: {data.status}</p>
-        <Link
-          className="cursor-pointer flex justify-end transition hover:text-slate-700 dark:hover:text-gray-300"
-          to={`/${search}`}
-        >
-          Close
-        </Link>
+        <div className="flex items-center justify-end gap-1.5">
+          <RefreshButton refetch={refetch} />
+          <Link
+            className="cursor-pointer flex transition hover:text-slate-700 dark:hover:text-gray-300"
+            to={`/${search}`}
+          >
+            Close
+          </Link>
+        </div>
       </div>
     </article>
   );

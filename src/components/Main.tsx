@@ -6,6 +6,7 @@ import useLocalStorage from '../hooks/useLocalStorage';
 import { cacheKey } from '../utils/local-storage';
 import { useEffect } from 'react';
 import { useGetCharacterQuery } from '../store/api';
+import RefreshButton from './RefreshButton';
 
 const Main = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -19,12 +20,15 @@ const Main = () => {
     }
   }, []);
 
-  const { data, isFetching, error } = useGetCharacterQuery(
+  const { data, isFetching, error, refetch } = useGetCharacterQuery(
     searchParams.toString()
   );
 
   return (
     <div className="main">
+      <div className="mb-2">
+        <RefreshButton refetch={refetch} />
+      </div>
       <Search />
       <Results
         results={data?.results || []}
