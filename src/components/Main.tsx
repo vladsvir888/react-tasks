@@ -5,6 +5,9 @@ import Pagination from './Pagination';
 import { useSearchParams } from 'react-router';
 import { API_URL } from '../constants/config';
 import useFetch from '../hooks/useFetch';
+import useLocalStorage from '../hooks/useLocalStorage';
+import { cacheKey } from '../utils/local-storage';
+import { useEffect } from 'react';
 
 type Data = {
   results: Character[];
@@ -13,7 +16,16 @@ type Data = {
 };
 
 const Main = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { value: searchQuery } = useLocalStorage(
+    cacheKey.reactCourseSearchTerm
+  );
+
+  useEffect(() => {
+    if (searchQuery && !searchParams.size) {
+      setSearchParams({ name: searchQuery });
+    }
+  }, []);
 
   const { data, loading, error } = useFetch<Data>(
     `${API_URL}/character/?${searchParams.toString()}`
