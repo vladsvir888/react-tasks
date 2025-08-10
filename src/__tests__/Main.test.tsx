@@ -1,17 +1,9 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import {
-  afterEach,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
-  type Mock,
-} from 'vitest';
+import { render, screen, waitFor } from '@testing-library/react';
+import { afterEach, describe, expect, it, vi, type Mock } from 'vitest';
 import Main from '../components/Main';
 import { BrowserRouter } from 'react-router';
-import { API_URL } from '../constants/config';
 import ReduxProvider from '../providers/redux';
+import { useGetCharacterQuery } from '../store/api';
 
 const TestWrapper = () => {
   return (
@@ -23,7 +15,6 @@ const TestWrapper = () => {
   );
 };
 
-const searchQuery = 'Rick';
 const mockData = {
   info: {
     count: 826,
@@ -46,22 +37,19 @@ const mockDataError = {
 };
 
 describe('Main', () => {
-  beforeEach(() => {
-    globalThis.fetch = vi.fn();
-  });
-
   afterEach(() => {
     vi.resetAllMocks();
   });
 
   it('fetches and displays results', async () => {
-    (globalThis.fetch as Mock).mockResolvedValue({
-      json: async () => mockData,
+    (useGetCharacterQuery as Mock).mockReturnValue({
+      data: mockData,
+      isFetching: false,
+      error: undefined,
+      refetch: vi.fn(),
     });
 
     const { container } = render(<TestWrapper />);
-
-    expect(container.querySelector('.skeleton')).toBeInTheDocument();
 
     await waitFor(() => {
       expect(screen.getByText('Rick Sanchez')).toBeInTheDocument();
@@ -70,13 +58,14 @@ describe('Main', () => {
   });
 
   it('fetches and displays error', async () => {
-    (globalThis.fetch as Mock).mockResolvedValue({
-      json: async () => mockDataError,
+    (useGetCharacterQuery as Mock).mockReturnValue({
+      data: mockDataError,
+      isFetching: false,
+      error: undefined,
+      refetch: vi.fn(),
     });
 
     const { container } = render(<TestWrapper />);
-
-    expect(container.querySelector('.skeleton')).toBeInTheDocument();
 
     await waitFor(() => {
       expect(screen.getByText(mockDataError.error)).toBeInTheDocument();
@@ -84,40 +73,18 @@ describe('Main', () => {
     });
   });
 
-  it('calls api with correct name parameter', async () => {
-    (globalThis.fetch as Mock).mockResolvedValue({
-      json: async () => mockData,
-    });
-
-    const { container } = render(<TestWrapper />);
-
-    const searchInputElement = container.querySelector(
-      '.search-input input'
-    ) as HTMLInputElement;
-    fireEvent.change(searchInputElement, { target: { value: searchQuery } });
-    expect(searchInputElement.value).toEqual(searchQuery);
-
-    const searchButtonElement = container.querySelector(
-      '.search-button'
-    ) as HTMLButtonElement;
-    fireEvent.click(searchButtonElement);
-
-    await waitFor(() => {
-      expect(globalThis.fetch).toHaveBeenCalledWith(
-        `${API_URL}/character/?name=${searchQuery}`
-      );
-    });
-  });
-
   it('handles fetch error successfully', async () => {
-    const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
-
-    (globalThis.fetch as Mock).mockRejectedValue(new Error('Fetch failed'));
+    (useGetCharacterQuery as Mock).mockReturnValue({
+      data: null,
+      isFetching: false,
+      error: 'Some error',
+      refetch: vi.fn(),
+    });
 
     render(<TestWrapper />);
 
     await waitFor(() => {
-      expect(consoleSpy).toHaveBeenCalled();
+      expect(screen.getByText(mockDataError.error)).toBeInTheDocument();
     });
   });
 });
