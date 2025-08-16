@@ -2,8 +2,8 @@ import { useState } from 'react';
 import SearchInput from './SearchInput';
 import SearchButton from './SearchButton';
 import { cacheKey } from '../utils/local-storage';
-import { useSearchParams } from 'react-router';
 import useLocalStorage from '../hooks/useLocalStorage';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 const Search = () => {
   const {
@@ -11,13 +11,14 @@ const Search = () => {
     set: setInLS,
     remove: removeFromLS,
   } = useLocalStorage(cacheKey.reactCourseSearchTerm);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const [query, setQuery] = useState(valueLS || '');
 
   const handleSubmit = (event: React.FormEvent): void => {
     event.preventDefault();
     setInLS(query);
-    setSearchParams({ name: query });
+    router.push(`?name=${query}`);
   };
 
   const handleQuery = (event: React.ChangeEvent<HTMLInputElement>): void => {
@@ -27,9 +28,10 @@ const Search = () => {
   const resetQuery = (): void => {
     setQuery('');
     removeFromLS();
-    searchParams.delete('name');
-    searchParams.delete('page');
-    setSearchParams(searchParams);
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    newSearchParams.delete('name');
+    newSearchParams.delete('page');
+    router.push(`?${newSearchParams.toString()}`);
   };
 
   return (

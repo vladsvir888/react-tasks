@@ -1,24 +1,17 @@
-import { Link } from 'react-router';
+import Link from 'next/link';
 import type { Character } from '../types';
-import Skeleton from './Skeleton';
 import RefreshButton from './RefreshButton';
+import { ReadonlyURLSearchParams } from 'next/navigation';
 
 type Props = {
-  data?: Character | null;
-  loading: boolean;
-  search: string;
-  error: unknown;
+  data: Character;
+  search: ReadonlyURLSearchParams;
   refetch: () => unknown;
 };
 
-const DetailsCard = ({ data, loading, search, error, refetch }: Props) => {
-  if (loading) {
-    return <Skeleton loading={loading} width={300} height={400} />;
-  }
-
-  if (!data || error) {
-    return <p>No character</p>;
-  }
+const DetailsCard = ({ data, search, refetch }: Props) => {
+  const searchParams = new URLSearchParams(search);
+  searchParams.delete('details');
 
   return (
     <article className="card border border-slate-200 rounded-sm">
@@ -32,7 +25,7 @@ const DetailsCard = ({ data, loading, search, error, refetch }: Props) => {
           <RefreshButton refetch={refetch} />
           <Link
             className="cursor-pointer flex transition hover:text-slate-700 dark:hover:text-gray-300"
-            to={`/${search}`}
+            href={`/?${searchParams.toString()}`}
           >
             Close
           </Link>

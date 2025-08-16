@@ -1,21 +1,23 @@
-import { Routes, Route } from 'react-router';
-import HomePage from './pages/HomePage';
-import AboutPage from './pages/AboutPage';
-import BaseLayout from './layouts/Base';
-import NotFoundPage from './pages/NotFoundPage';
-import DetailsPage from './pages/DetailsPage';
+import ReduxProvider from './providers/redux';
+import ThemeProvider from './providers/theme';
+import Navigation from './components/Navigation';
+import ThemeSwitcher from './components/ThemeSwitcher';
+import FlyOutPanel from './components/FlyOutPanel';
 
-const App = () => {
+const App = ({ children }: { children: React.ReactNode }) => {
   return (
-    <Routes>
-      <Route element={<BaseLayout />}>
-        <Route path="/" element={<HomePage />}>
-          <Route path="details/:id" element={<DetailsPage />} />
-        </Route>
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="*" element={<NotFoundPage />} />
-      </Route>
-    </Routes>
+    <ReduxProvider>
+      <ThemeProvider>
+        <div className="p-2.5 pb-24">
+          <header className="flex flex-wrap items-center justify-between mb-2.5 gap-2.5">
+            <Navigation />
+            <ThemeSwitcher />
+          </header>
+          <main>{children}</main>
+          <FlyOutPanel />
+        </div>
+      </ThemeProvider>
+    </ReduxProvider>
   );
 };
 

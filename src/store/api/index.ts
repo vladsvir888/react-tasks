@@ -6,7 +6,7 @@ export const api = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({ baseUrl: API_URL }),
   endpoints: (builder) => ({
-    getCharacter: builder.query<Data<Character[]>, string>({
+    getCharacter: builder.query<Data<Character[]>, string | undefined>({
       query: (searchParams) => `/character/?${searchParams}`,
     }),
     getCharacterById: builder.query<Character, string>({

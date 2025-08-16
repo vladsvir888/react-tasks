@@ -1,4 +1,7 @@
-import { NavLink, type NavLinkRenderProps } from 'react-router';
+'use client';
+
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 const menu = [
   {
@@ -12,20 +15,22 @@ const menu = [
 ];
 
 const Navigation = () => {
+  const pathname = usePathname();
+
   return (
     <nav className="flex gap-2">
       {menu.map(({ to, text }) => (
-        <NavLink
+        <Link
           key={text}
-          to={to}
-          className={({ isActive }: NavLinkRenderProps) =>
-            isActive
+          href={to}
+          className={
+            pathname === to
               ? 'underline'
               : 'transition hover:text-slate-700 dark:hover:text-gray-300'
           }
         >
           {text}
-        </NavLink>
+        </Link>
       ))}
     </nav>
   );

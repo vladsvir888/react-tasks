@@ -1,10 +1,10 @@
-import { Link } from 'react-router';
+import Link from 'next/link';
 
 const NotFoundPage = () => {
   return (
     <div className="not-found p-2.5 flex justify-center items-center flex-col">
       <h1>404</h1>
-      <Link to="/" className="transition underline hover:no-underline">
+      <Link href="/" className="transition underline hover:no-underline">
         Go home
       </Link>
     </div>

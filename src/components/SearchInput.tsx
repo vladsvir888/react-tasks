@@ -1,10 +1,15 @@
-import IconClose from './icons/IconClose';
+import dynamic from 'next/dynamic';
 
 type Props = {
   query: string;
   setQuery: (event: React.ChangeEvent<HTMLInputElement>) => void;
   resetQuery: () => void;
 };
+
+const SearchCleanButton = dynamic(
+  () => import('../components/SearchCleanButton'),
+  { ssr: false }
+);
 
 const SearchInput = ({ query, setQuery, resetQuery }: Props) => {
   return (
@@ -18,16 +23,7 @@ const SearchInput = ({ query, setQuery, resetQuery }: Props) => {
         value={query}
         onChange={setQuery}
       />
-      {query && (
-        <button
-          title="Clean query"
-          className="cursor-pointer absolute right-1 top-[50%] translate-y-[-50%]"
-          type="button"
-          onClick={resetQuery}
-        >
-          <IconClose />
-        </button>
-      )}
+      <SearchCleanButton query={query} resetQuery={resetQuery} />
     </div>
   );
 };

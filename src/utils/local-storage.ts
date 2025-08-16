@@ -20,10 +20,12 @@ interface CacheUtil {
 }
 
 export const cacheUtil: CacheUtil = {
-  set: (key, value) => {
-    localStorage.setItem(key, JSON.stringify(value));
+  set: (key, value) => localStorage.setItem(key, JSON.stringify(value)),
+  get: (key) => {
+    if (typeof window !== 'undefined') {
+      return JSON.parse(localStorage.getItem(key) ?? 'null');
+    }
   },
-  get: (key) => JSON.parse(localStorage.getItem(key) ?? 'null'),
   remove: (key) => localStorage.removeItem(key),
   removeAll: () => localStorage.clear(),
 };

@@ -1,3 +1,5 @@
+'use client';
+
 import { useGetTheme } from '../hooks/useGetTheme';
 import { type Theme } from '../types';
 import { themeList } from '../constants/theme';
