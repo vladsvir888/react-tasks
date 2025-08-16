@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { Link } from '../i18n/navigation';
 import type { CharacterSummary } from '../types';
 import { useAppDispatch, useAppSelector } from '../store';
 import {

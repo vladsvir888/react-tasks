@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import Main from '../components/Main';
+import Main from '../../components/Main';
 
 const HomePage = () => {
   return (

@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useAppDispatch, useAppSelector } from '../store';
 import {
   createDownloadFavoriteLink,
@@ -9,6 +10,7 @@ import {
 } from '../store/favoriteSlice';
 
 const FlyOutPanel = () => {
+  const t = useTranslations();
   const count = useAppSelector(selectFavoriteItemsCount);
   const link = useAppSelector(selectFavoriteDownloadLink);
   const dispatch = useAppDispatch();
@@ -26,7 +28,7 @@ const FlyOutPanel = () => {
           type="button"
           onClick={() => dispatch(removeAllFavorite())}
         >
-          Unselect all
+          {t('Unselect all')}
         </button>
         <a
           href={link}
@@ -36,7 +38,7 @@ const FlyOutPanel = () => {
             dispatch(createDownloadFavoriteLink());
           }}
         >
-          Download
+          {t('Download')}
         </a>
       </div>
     </div>

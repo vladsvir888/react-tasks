@@ -1,15 +1,19 @@
+import { useTranslations } from 'next-intl';
+
 const AboutPage = () => {
+  const t = useTranslations('About');
+
   return (
     <div className="about">
-      <h1>About me</h1>
-      <p>Frontend developer | Passionate about tech | currently in Minsk</p>
+      <h1>{t('title')}</h1>
+      <p>{t('text')}</p>
       <a
         href="https://rs.school/courses/reactjs"
         target="_blank"
         rel="noreferrer"
         className="transition underline hover:no-underline"
       >
-        RS School React course
+        RS School React {t('course')}
       </a>
     </div>
   );

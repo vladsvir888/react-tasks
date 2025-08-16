@@ -1,3 +1,4 @@
+import { useTranslations } from 'next-intl';
 import type { Character } from '../types';
 import ResultsItem from './ResultsItem';
 import Skeleton from './Skeleton';
@@ -9,6 +10,8 @@ type Props = {
 };
 
 const Results = ({ results, loading, error }: Props) => {
+  const t = useTranslations();
+
   const list = results.map((item) => ({
     id: item.id,
     name: item.name,
@@ -34,7 +37,7 @@ const Results = ({ results, loading, error }: Props) => {
 
   return (
     <div className="results pt-2.5">
-      <h1 className="text-3xl font-medium">Search results</h1>
+      <h1 className="text-3xl font-medium">{t('Search results')}</h1>
       <div className="pt-2.5">
         <ul className="flex flex-col gap-y-2">
           {list.map((item) => (

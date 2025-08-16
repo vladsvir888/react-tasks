@@ -1,21 +1,23 @@
 'use client';
 
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import { Link } from '../i18n/navigation';
 import { usePathname } from 'next/navigation';
-
-const menu = [
-  {
-    to: '/',
-    text: 'Home',
-  },
-  {
-    to: '/about',
-    text: 'About',
-  },
-];
 
 const Navigation = () => {
   const pathname = usePathname();
+  const t = useTranslations('Navigation');
+
+  const menu = [
+    {
+      to: '/',
+      text: t('Home'),
+    },
+    {
+      to: '/about',
+      text: t('About'),
+    },
+  ];
 
   return (
     <nav className="flex gap-2">
