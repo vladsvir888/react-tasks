@@ -2,8 +2,13 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   distDir: './dist',
-  eslint: {
-    ignoreDuringBuilds: true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'rickandmortyapi.com',
+      },
+    ],
   },
 };
 

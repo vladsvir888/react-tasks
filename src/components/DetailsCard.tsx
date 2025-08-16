@@ -2,6 +2,7 @@ import Link from 'next/link';
 import type { Character } from '../types';
 import RefreshButton from './RefreshButton';
 import { ReadonlyURLSearchParams } from 'next/navigation';
+import Image from 'next/image';
 
 type Props = {
   data: Character;
@@ -15,7 +16,7 @@ const DetailsCard = ({ data, search, refetch }: Props) => {
 
   return (
     <article className="card border border-slate-200 rounded-sm">
-      <img src={data.image} alt="" width={300} height={300} />
+      <Image src={data.image} alt="" width={300} height={300} />
       <div className="p-2.5">
         <h2 className="font-bold">{data.name}</h2>
         <p>Gender: {data.gender}</p>
