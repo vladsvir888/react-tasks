@@ -1,21 +1,17 @@
 import { render, screen, waitFor } from '@testing-library/react';
-import {
-  afterEach,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
-  type Mock,
-} from 'vitest';
+import { afterEach, describe, expect, it, vi, type Mock } from 'vitest';
 import { BrowserRouter } from 'react-router';
 import DetailsPage from '../pages/DetailsPage';
 import type { Character } from '../types';
+import { useGetCharacterByIdQuery } from '../store/api';
+import ReduxProvider from '../providers/redux';
 
 const DetailsWithRouter = () => {
   return (
     <BrowserRouter>
-      <DetailsPage />
+      <ReduxProvider>
+        <DetailsPage />
+      </ReduxProvider>
     </BrowserRouter>
   );
 };
@@ -31,17 +27,16 @@ const mockData: Character = {
 };
 
 describe('DetailsPage', () => {
-  beforeEach(() => {
-    globalThis.fetch = vi.fn();
-  });
-
   afterEach(() => {
     vi.resetAllMocks();
   });
 
   it('fetches and displays details data', async () => {
-    (globalThis.fetch as Mock).mockResolvedValue({
-      json: async () => mockData,
+    (useGetCharacterByIdQuery as Mock).mockReturnValue({
+      data: mockData,
+      isFetching: false,
+      error: undefined,
+      refetch: vi.fn(),
     });
 
     render(<DetailsWithRouter />);
@@ -62,14 +57,17 @@ describe('DetailsPage', () => {
   });
 
   it('handles fetch error successfully', async () => {
-    const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
-
-    (globalThis.fetch as Mock).mockRejectedValue(new Error('Fetch failed'));
+    (useGetCharacterByIdQuery as Mock).mockReturnValue({
+      data: null,
+      isFetching: false,
+      error: 'Some error',
+      refetch: vi.fn(),
+    });
 
     render(<DetailsWithRouter />);
 
     await waitFor(() => {
-      expect(consoleSpy).toHaveBeenCalled();
+      expect(screen.getByText('No character')).toBeInTheDocument();
     });
   });
 });

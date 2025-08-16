@@ -5,7 +5,7 @@ import Skeleton from './Skeleton';
 type Props = {
   results: Character[];
   loading: boolean;
-  error?: string | null;
+  error?: unknown;
 };
 
 const Results = ({ results, loading, error }: Props) => {
@@ -25,7 +25,7 @@ const Results = ({ results, loading, error }: Props) => {
   }
 
   if (error) {
-    return <p className="pt-2.5">{error}</p>;
+    return <p className="pt-2.5">There is nothing here</p>;
   }
 
   if (!list.length) {
