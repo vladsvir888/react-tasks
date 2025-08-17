@@ -3,12 +3,10 @@ import type { CharacterSummary, CharacterSummaryWithChecked } from '../types';
 
 export type FavoriteState = {
   items: CharacterSummaryWithChecked[];
-  downloadLink?: string;
 };
 
 const initialState: FavoriteState = {
   items: [],
-  downloadLink: undefined,
 };
 
 const favoriteSlice = createSlice({
@@ -18,7 +16,7 @@ const favoriteSlice = createSlice({
     selectFavoriteItemsCount: (state) => state.items.length,
     selectFavoriteItem: (state, id: number) =>
       state.items.find((item) => item.id === id),
-    selectFavoriteDownloadLink: (state) => state.downloadLink,
+    selectFavouriteItems: (state) => state.items,
   },
   reducers: {
     addFavorite(state, action: PayloadAction<CharacterSummary>) {
@@ -30,29 +28,15 @@ const favoriteSlice = createSlice({
     removeAllFavorite(state) {
       state.items = [];
     },
-    createDownloadFavoriteLink(state) {
-      const headers = ['id', 'name', 'description', 'url'].join(';');
-      const rows = state.items.map((item) =>
-        [item.id, item.name, item.description, item.url].join(';')
-      );
-      const csvString = [headers, ...rows].join('\r\n');
-      const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      state.downloadLink = url;
-    },
   },
 });
 
 export const {
   selectFavoriteItemsCount,
   selectFavoriteItem,
-  selectFavoriteDownloadLink,
+  selectFavouriteItems,
 } = favoriteSlice.selectors;
-export const {
-  addFavorite,
-  removeFavorite,
-  removeAllFavorite,
-  createDownloadFavoriteLink,
-} = favoriteSlice.actions;
+export const { addFavorite, removeFavorite, removeAllFavorite } =
+  favoriteSlice.actions;
 
 export default favoriteSlice;
