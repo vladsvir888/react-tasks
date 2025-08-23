@@ -1,6 +1,9 @@
 import * as yup from 'yup';
+import { countries } from '../store/formsSlice';
+import type { Gender } from '../types';
 
 const MAX_SIZE_PICTURE = 1024 * 1024; // 1MB
+const VALID_TYPES_PICTURE = ['png', 'jpeg'];
 
 const schema = yup.object({
   name: yup
@@ -20,18 +23,8 @@ const schema = yup.object({
       (value) => !!value && /^[1-9]\d*$/.test(value)
     ),
   email: yup.string().required().email(),
-  gender: yup.string().required(),
-  country: yup
-    .string()
-    .required()
-    .oneOf([
-      'India',
-      'China',
-      'United States',
-      'Indonesia',
-      'Pakistan',
-      'Nigeria',
-    ]),
+  gender: yup.string<Gender>().required(),
+  country: yup.string().required().oneOf(countries),
   password: yup
     .string()
     .required()
@@ -57,6 +50,7 @@ const schema = yup.object({
     ),
   passwordConfirmation: yup
     .string()
+    .required()
     .oneOf([yup.ref('password')], 'passwords must match'),
   picture: yup
     .mixed<FileList>()
@@ -71,7 +65,7 @@ const schema = yup.object({
       'invalid picture type (allow png/jpeg)',
       (value) =>
         !!value.length &&
-        ['png', 'jpeg'].some((ext) => ext === value[0].type.split('/')[1])
+        VALID_TYPES_PICTURE.some((ext) => ext === value[0].type.split('/')[1])
     )
     .test(
       'picture-size',

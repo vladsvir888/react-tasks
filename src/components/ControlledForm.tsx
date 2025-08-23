@@ -4,8 +4,15 @@ import schema from '../validation';
 import Button from './UI/Button';
 import ErrorMessage from './UI/ErrorMessage';
 import { useState } from 'react';
+import type { Form, FormStore } from '../types';
+import { addForm, selectCountries } from '../store/formsSlice';
+import { useAppDispatch, useAppSelector } from '../store';
 
-const ControlledForm = () => {
+type Props = {
+  setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const ControlledForm = ({ setIsVisible }: Props) => {
   const {
     register,
     handleSubmit,
@@ -15,7 +22,26 @@ const ControlledForm = () => {
     mode: 'onChange',
   });
 
-  const onSubmit = (data: Record<string, unknown>) => console.log(data);
+  const countries = useAppSelector(selectCountries);
+  const dispatch = useAppDispatch();
+
+  const onSubmit = (data: Form) => {
+    const { picture, ...rest } = data;
+
+    const resultData: FormStore = {
+      ...rest,
+      type: 'controlled',
+      pictureSrc: '',
+    };
+
+    const reader = new FileReader();
+    reader.readAsDataURL(data.picture[0]);
+    reader.onload = () => {
+      resultData.pictureSrc = reader.result as string;
+      dispatch(addForm(resultData));
+      setIsVisible(false);
+    };
+  };
 
   const [pictureName, setPictureName] = useState('Choose a picture');
   const handlePicture = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -87,12 +113,9 @@ const ControlledForm = () => {
           {...register('country')}
         />
         <datalist id="countries">
-          <option value="India" />
-          <option value="China" />
-          <option value="United States" />
-          <option value="Indonesia" />
-          <option value="Pakistan" />
-          <option value="Nigeria" />
+          {countries.map((country) => (
+            <option key={country} value={country} />
+          ))}
         </datalist>
         <ErrorMessage message={errors.country?.message} />
       </div>
@@ -126,7 +149,7 @@ const ControlledForm = () => {
             type="file"
             id="picture"
             accept="image/png, image/jpeg"
-            className="absolute inset-0 opacity-0"
+            className="absolute inset-0 text-[0px]"
             {...register('picture', {
               onChange: handlePicture,
             })}
