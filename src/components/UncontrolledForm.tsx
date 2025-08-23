@@ -1,47 +1,63 @@
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm } from 'react-hook-form';
 import schema from '../validation';
 import Button from './UI/Button';
 import ErrorMessage from './UI/ErrorMessage';
 import { useState } from 'react';
-import type { Form, FormStore } from '../types';
+import type { Form, FormError, FormKeys, FormStore } from '../types';
 import { addForm, selectCountries } from '../store/formsSlice';
 import { useAppDispatch, useAppSelector } from '../store';
 import usePasswordStrength from '../hooks/usePasswordStrength';
+import { ValidationError } from 'yup';
 
 type Props = {
   setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const ControlledForm = ({ setIsVisible }: Props) => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isValid },
-  } = useForm({
-    resolver: yupResolver(schema),
-    mode: 'onChange',
-  });
-
+const UncontrolledForm = ({ setIsVisible }: Props) => {
   const countries = useAppSelector(selectCountries);
   const dispatch = useAppDispatch();
   const { checkPassword, progressValue } = usePasswordStrength();
+  const [errors, setErrors] = useState<FormError>({});
 
-  const onSubmit = (data: Form) => {
-    const { picture, ...rest } = data;
-    const resultData: FormStore = {
-      ...rest,
-      type: 'controlled',
-      pictureSrc: '',
-    };
+  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
-    const reader = new FileReader();
-    reader.readAsDataURL(data.picture[0]);
-    reader.onload = () => {
-      resultData.pictureSrc = reader.result as string;
-      dispatch(addForm(resultData));
-      setIsVisible(false);
-    };
+    const formData = new FormData(event.currentTarget);
+
+    const data = Object.fromEntries(formData) as unknown as Form;
+    data.conditionsAgreement = data.conditionsAgreement === 'on'; // FormData возвращает чекбокс checked как 'on'
+    data.picture = event.currentTarget.picture.files; // FormData не возвращает FileList
+
+    checkPassword(data.password);
+
+    try {
+      schema.validateSync(data, { abortEarly: false });
+
+      const { picture, ...rest } = data;
+      const resultData: FormStore = {
+        ...rest,
+        type: 'uncontrolled',
+        pictureSrc: '',
+      };
+
+      const reader = new FileReader();
+      reader.readAsDataURL(data.picture[0]);
+      reader.onload = () => {
+        resultData.pictureSrc = reader.result as string;
+        dispatch(addForm(resultData));
+        setIsVisible(false);
+      };
+    } catch (error) {
+      if (error instanceof ValidationError) {
+        const errs = {} as FormError;
+
+        error.inner.forEach((errorInner) => {
+          const path = errorInner.path as FormKeys;
+          if (!errs[path]) errs[path] = { message: errorInner.message };
+        });
+
+        setErrors(errs);
+      }
+    }
   };
 
   const [pictureName, setPictureName] = useState('Choose a picture');
@@ -51,14 +67,14 @@ const ControlledForm = ({ setIsVisible }: Props) => {
   };
 
   return (
-    <form className="flex flex-col gap-y-2" onSubmit={handleSubmit(onSubmit)}>
+    <form className="flex flex-col gap-y-2" onSubmit={onSubmit}>
       <div className="flex flex-col gap-y-1">
         <label htmlFor="name">Name</label>
         <input
           type="text"
           id="name"
           className="border-gray-300 border p-2 rounded"
-          {...register('name')}
+          name="name"
         />
         <ErrorMessage message={errors.name?.message} />
       </div>
@@ -68,41 +84,44 @@ const ControlledForm = ({ setIsVisible }: Props) => {
           type="text"
           id="age"
           className="border-gray-300 border p-2 rounded"
-          {...register('age')}
+          name="age"
         />
         <ErrorMessage message={errors.age?.message} />
       </div>
       <div className="flex flex-col gap-y-1">
         <label htmlFor="email">Email</label>
         <input
-          type="email"
+          type="text"
           id="email"
           className="border-gray-300 border p-2 rounded"
-          {...register('email')}
+          name="email"
         />
         <ErrorMessage message={errors.email?.message} />
       </div>
-      <div className="flex items-center gap-x-2">
-        <div className="flex items-center gap-x-1">
-          <input
-            type="radio"
-            id="gender-1"
-            value="male"
-            className="accent-black"
-            {...register('gender')}
-          />
-          <label htmlFor="gender-1">Male</label>
+      <div className="flex flex-col gap-y-1">
+        <div className="flex items-center gap-x-2">
+          <div className="flex items-center gap-x-1">
+            <input
+              type="radio"
+              id="gender-1"
+              value="male"
+              className="accent-black"
+              name="gender"
+            />
+            <label htmlFor="gender-1">Male</label>
+          </div>
+          <div className="flex items-center gap-x-1">
+            <input
+              type="radio"
+              id="gender-2"
+              value="female"
+              className="accent-black"
+              name="gender"
+            />
+            <label htmlFor="gender-2">Female</label>
+          </div>
         </div>
-        <div className="flex items-center gap-x-1">
-          <input
-            type="radio"
-            id="gender-2"
-            value="female"
-            className="accent-black"
-            {...register('gender')}
-          />
-          <label htmlFor="gender-2">Female</label>
-        </div>
+        <ErrorMessage message={errors.gender?.message} />
       </div>
       <div className="flex flex-col gap-y-1">
         <label htmlFor="country">Countries</label>
@@ -111,7 +130,7 @@ const ControlledForm = ({ setIsVisible }: Props) => {
           list="countries"
           id="country"
           className="border-gray-300 border p-2 rounded"
-          {...register('country')}
+          name="country"
         />
         <datalist id="countries">
           {countries.map((country) => (
@@ -126,10 +145,7 @@ const ControlledForm = ({ setIsVisible }: Props) => {
           id="password"
           type="password"
           className="border-gray-300 border p-2 rounded"
-          {...register('password', {
-            onChange: (event: React.ChangeEvent<HTMLInputElement>) =>
-              checkPassword(event.target.value),
-          })}
+          name="password"
         />
         {!!progressValue && <progress max="100" value={progressValue} />}
         <ErrorMessage message={errors.password?.message} />
@@ -140,7 +156,7 @@ const ControlledForm = ({ setIsVisible }: Props) => {
           id="passwordConfirmation"
           type="password"
           className="border-gray-300 border p-2 rounded"
-          {...register('passwordConfirmation')}
+          name="passwordConfirmation"
         />
         <ErrorMessage message={errors.passwordConfirmation?.message} />
       </div>
@@ -155,9 +171,8 @@ const ControlledForm = ({ setIsVisible }: Props) => {
             id="picture"
             accept="image/png, image/jpeg"
             className="absolute inset-0 text-[0px]"
-            {...register('picture', {
-              onChange: handlePicture,
-            })}
+            name="picture"
+            onChange={handlePicture}
           />
         </label>
         <ErrorMessage message={errors.picture?.message} />
@@ -168,7 +183,7 @@ const ControlledForm = ({ setIsVisible }: Props) => {
             type="checkbox"
             id="conditionsAgreement"
             className="accent-black"
-            {...register('conditionsAgreement')}
+            name="conditionsAgreement"
           />
           <label htmlFor="conditionsAgreement">
             Accept Terms and Conditions agreement
@@ -176,15 +191,11 @@ const ControlledForm = ({ setIsVisible }: Props) => {
         </div>
         <ErrorMessage message={errors.conditionsAgreement?.message} />
       </div>
-      <Button
-        type="submit"
-        classes="mt-3 w-full disabled:opacity-50"
-        disabled={!isValid}
-      >
+      <Button type="submit" classes="mt-3 w-full">
         Submit
       </Button>
     </form>
   );
 };
 
-export default ControlledForm;
+export default UncontrolledForm;

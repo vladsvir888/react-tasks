@@ -5,6 +5,7 @@ import Button from './components/UI/Button';
 import { useAppSelector } from './store';
 import { selectForms } from './store/formsSlice';
 import FormCard from './components/FormCard';
+import UncontrolledForm from './components/UncontrolledForm';
 
 function App() {
   const [isVisibleModal1, setIsVisibleModal1] = useState(false);
@@ -41,34 +42,7 @@ function App() {
           isVisible={isVisibleModal1}
           setIsVisible={setIsVisibleModal1}
         >
-          <div>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius dicta
-            alias temporibus obcaecati nostrum. Dolorum obcaecati eaque totam
-            quas quam veritatis repellat! Qui quam explicabo aspernatur.
-            Accusantium, perferendis consequuntur recusandae officiis natus
-            tempore tenetur exercitationem necessitatibus, dicta quae illum
-            placeat perspiciatis ipsa doloribus. Sit, fuga reprehenderit
-            molestiae veritatis aliquam exercitationem deserunt saepe assumenda
-            molestias ipsa vel nam quidem expedita distinctio repellat iste?
-            Repellendus saepe quibusdam nobis commodi ipsa facilis nisi ea
-            similique, eveniet corporis libero sequi distinctio delectus eaque
-            provident asperiores. Sapiente deleniti sunt earum pariatur dolore
-            nesciunt fugiat incidunt cum! Iste, reprehenderit placeat. Velit ea
-            aliquid atque in illo? Lorem ipsum dolor sit amet consectetur
-            adipisicing elit. Eius dicta alias temporibus obcaecati nostrum.
-            Dolorum obcaecati eaque totam quas quam veritatis repellat! Qui quam
-            explicabo aspernatur. Accusantium, perferendis consequuntur
-            recusandae officiis natus tempore tenetur exercitationem
-            necessitatibus, dicta quae illum placeat perspiciatis ipsa
-            doloribus. Sit, fuga reprehenderit molestiae veritatis aliquam
-            exercitationem deserunt saepe assumenda molestias ipsa vel nam
-            quidem expedita distinctio repellat iste? Repellendus saepe
-            quibusdam nobis commodi ipsa facilis nisi ea similique, eveniet
-            corporis libero sequi distinctio delectus eaque provident
-            asperiores. Sapiente deleniti sunt earum pariatur dolore nesciunt
-            fugiat incidunt cum! Iste, reprehenderit placeat. Velit ea aliquid
-            atque in illo?
-          </div>
+          <UncontrolledForm setIsVisible={setIsVisibleModal1} />
         </Modal>
         <Modal
           title="Controlled form"

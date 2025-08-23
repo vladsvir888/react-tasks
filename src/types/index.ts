@@ -11,10 +11,17 @@ export type Form = {
   password: string;
   passwordConfirmation: string;
   picture: FileList;
-  conditionsAgreement: boolean;
+  conditionsAgreement: boolean | 'on';
 };
+export type FormKeys = keyof Form;
 
 export type FormStore = Omit<Form, 'picture'> & {
   type: FormType;
   pictureSrc: string;
+};
+
+export type FormError = {
+  [Property in FormKeys]?: {
+    message: string;
+  };
 };
