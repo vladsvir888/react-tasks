@@ -7,6 +7,7 @@ import { useState } from 'react';
 import type { Form, FormStore } from '../types';
 import { addForm, selectCountries } from '../store/formsSlice';
 import { useAppDispatch, useAppSelector } from '../store';
+import usePasswordStrength from '../hooks/usePasswordStrength';
 
 type Props = {
   setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
@@ -24,6 +25,7 @@ const ControlledForm = ({ setIsVisible }: Props) => {
 
   const countries = useAppSelector(selectCountries);
   const dispatch = useAppDispatch();
+  const { checkPassword, progressValue } = usePasswordStrength();
 
   const onSubmit = (data: Form) => {
     const { picture, ...rest } = data;
@@ -125,8 +127,12 @@ const ControlledForm = ({ setIsVisible }: Props) => {
           id="password"
           type="password"
           className="border-gray-300 border p-2 rounded"
-          {...register('password')}
+          {...register('password', {
+            onChange: (event: React.ChangeEvent<HTMLInputElement>) =>
+              checkPassword(event.target.value),
+          })}
         />
+        {!!progressValue && <progress max="100" value={progressValue} />}
         <ErrorMessage message={errors.password?.message} />
       </div>
       <div className="flex flex-col gap-y-1">
