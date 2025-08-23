@@ -1,5 +1,5 @@
 import { createPortal } from 'react-dom';
-import IconClose from './icons/IconClose';
+import IconClose from '../icons/IconClose';
 import { useEffect } from 'react';
 
 type Props = {
@@ -9,7 +9,7 @@ type Props = {
   setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const SharedModal = ({ children, title, isVisible, setIsVisible }: Props) => {
+const Modal = ({ children, title, isVisible, setIsVisible }: Props) => {
   const close = () => setIsVisible(false);
 
   useEffect(() => {
@@ -59,4 +59,4 @@ const SharedModal = ({ children, title, isVisible, setIsVisible }: Props) => {
   );
 };
 
-export default SharedModal;
+export default Modal;
