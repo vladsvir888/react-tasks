@@ -25,7 +25,7 @@ const UncontrolledForm = ({ setIsVisible }: Props) => {
 
     const data = Object.fromEntries(formData) as unknown as Form;
     data.conditionsAgreement = data.conditionsAgreement === 'on'; // FormData возвращает чекбокс checked как 'on'
-    data.picture = event.currentTarget.picture.files; // FormData не возвращает FileList
+    data.picture = event.currentTarget.picture?.files; // FormData не возвращает FileList
 
     checkPassword(data.password);
 
@@ -75,6 +75,7 @@ const UncontrolledForm = ({ setIsVisible }: Props) => {
           id="name"
           className="border-gray-300 border p-2 rounded"
           name="name"
+          data-testid="name"
         />
         <ErrorMessage message={errors.name?.message} />
       </div>
@@ -85,6 +86,7 @@ const UncontrolledForm = ({ setIsVisible }: Props) => {
           id="age"
           className="border-gray-300 border p-2 rounded"
           name="age"
+          data-testid="age"
         />
         <ErrorMessage message={errors.age?.message} />
       </div>
@@ -95,6 +97,7 @@ const UncontrolledForm = ({ setIsVisible }: Props) => {
           id="email"
           className="border-gray-300 border p-2 rounded"
           name="email"
+          data-testid="email"
         />
         <ErrorMessage message={errors.email?.message} />
       </div>
@@ -107,6 +110,7 @@ const UncontrolledForm = ({ setIsVisible }: Props) => {
               value="male"
               className="accent-black"
               name="gender"
+              data-testid="gender-1"
             />
             <label htmlFor="gender-1">Male</label>
           </div>
@@ -117,6 +121,7 @@ const UncontrolledForm = ({ setIsVisible }: Props) => {
               value="female"
               className="accent-black"
               name="gender"
+              data-testid="gender-2"
             />
             <label htmlFor="gender-2">Female</label>
           </div>
@@ -131,6 +136,7 @@ const UncontrolledForm = ({ setIsVisible }: Props) => {
           id="country"
           className="border-gray-300 border p-2 rounded"
           name="country"
+          data-testid="country"
         />
         <datalist id="countries">
           {countries.map((country) => (
@@ -146,6 +152,7 @@ const UncontrolledForm = ({ setIsVisible }: Props) => {
           type="password"
           className="border-gray-300 border p-2 rounded"
           name="password"
+          data-testid="password"
         />
         {!!progressValue && <progress max="100" value={progressValue} />}
         <ErrorMessage message={errors.password?.message} />
@@ -157,6 +164,7 @@ const UncontrolledForm = ({ setIsVisible }: Props) => {
           type="password"
           className="border-gray-300 border p-2 rounded"
           name="passwordConfirmation"
+          data-testid="passwordConfirmation"
         />
         <ErrorMessage message={errors.passwordConfirmation?.message} />
       </div>
@@ -172,6 +180,7 @@ const UncontrolledForm = ({ setIsVisible }: Props) => {
             accept="image/png, image/jpeg"
             className="absolute inset-0 text-[0px]"
             name="picture"
+            data-testid="picture"
             onChange={handlePicture}
           />
         </label>
@@ -184,9 +193,10 @@ const UncontrolledForm = ({ setIsVisible }: Props) => {
             id="conditionsAgreement"
             className="accent-black"
             name="conditionsAgreement"
+            data-testid="conditionsAgreement"
           />
           <label htmlFor="conditionsAgreement">
-            Accept Terms and Conditions agreement
+            Terms and conditions agreement
           </label>
         </div>
         <ErrorMessage message={errors.conditionsAgreement?.message} />

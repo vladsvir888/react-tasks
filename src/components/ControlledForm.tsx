@@ -58,6 +58,7 @@ const ControlledForm = ({ setIsVisible }: Props) => {
           type="text"
           id="name"
           className="border-gray-300 border p-2 rounded"
+          data-testid="name"
           {...register('name')}
         />
         <ErrorMessage message={errors.name?.message} />
@@ -68,6 +69,7 @@ const ControlledForm = ({ setIsVisible }: Props) => {
           type="text"
           id="age"
           className="border-gray-300 border p-2 rounded"
+          data-testid="age"
           {...register('age')}
         />
         <ErrorMessage message={errors.age?.message} />
@@ -78,6 +80,7 @@ const ControlledForm = ({ setIsVisible }: Props) => {
           type="email"
           id="email"
           className="border-gray-300 border p-2 rounded"
+          data-testid="email"
           {...register('email')}
         />
         <ErrorMessage message={errors.email?.message} />
@@ -89,6 +92,7 @@ const ControlledForm = ({ setIsVisible }: Props) => {
             id="gender-1"
             value="male"
             className="accent-black"
+            data-testid="gender-1"
             {...register('gender')}
           />
           <label htmlFor="gender-1">Male</label>
@@ -99,6 +103,7 @@ const ControlledForm = ({ setIsVisible }: Props) => {
             id="gender-2"
             value="female"
             className="accent-black"
+            data-testid="gender-2"
             {...register('gender')}
           />
           <label htmlFor="gender-2">Female</label>
@@ -111,6 +116,7 @@ const ControlledForm = ({ setIsVisible }: Props) => {
           list="countries"
           id="country"
           className="border-gray-300 border p-2 rounded"
+          data-testid="country"
           {...register('country')}
         />
         <datalist id="countries">
@@ -126,6 +132,7 @@ const ControlledForm = ({ setIsVisible }: Props) => {
           id="password"
           type="password"
           className="border-gray-300 border p-2 rounded"
+          data-testid="password"
           {...register('password', {
             onChange: (event: React.ChangeEvent<HTMLInputElement>) =>
               checkPassword(event.target.value),
@@ -140,6 +147,7 @@ const ControlledForm = ({ setIsVisible }: Props) => {
           id="passwordConfirmation"
           type="password"
           className="border-gray-300 border p-2 rounded"
+          data-testid="passwordConfirmation"
           {...register('passwordConfirmation')}
         />
         <ErrorMessage message={errors.passwordConfirmation?.message} />
@@ -155,6 +163,7 @@ const ControlledForm = ({ setIsVisible }: Props) => {
             id="picture"
             accept="image/png, image/jpeg"
             className="absolute inset-0 text-[0px]"
+            data-testid="picture"
             {...register('picture', {
               onChange: handlePicture,
             })}
@@ -168,10 +177,11 @@ const ControlledForm = ({ setIsVisible }: Props) => {
             type="checkbox"
             id="conditionsAgreement"
             className="accent-black"
+            data-testid="conditionsAgreement"
             {...register('conditionsAgreement')}
           />
           <label htmlFor="conditionsAgreement">
-            Accept Terms and Conditions agreement
+            Terms and conditions agreement
           </label>
         </div>
         <ErrorMessage message={errors.conditionsAgreement?.message} />
