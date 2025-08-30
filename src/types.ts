@@ -26,6 +26,7 @@ export type ResponseData = {
   table: TableData[];
   years: number[];
   columns: string[];
+  additionalColumns: string[];
 };
 
 export type SortOrder = 'asc' | 'desc';

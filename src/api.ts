@@ -45,6 +45,12 @@ export function fetchData() {
           'co2',
           'co2_per_capita',
         ],
+        additionalColumns: [
+          'cement_co2',
+          'co2_growth_abs',
+          'co2_growth_prct',
+          'coal_co2',
+        ],
       };
     } catch (error) {
       console.log(error);

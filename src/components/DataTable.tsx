@@ -2,11 +2,16 @@ import { use, useState } from 'react';
 import { fetchData } from '../api';
 import type { ResponseData, SortOrder, SortType, TableData } from '../types';
 import { sortOrder, sortType, unknownValue } from '../consts';
+import Modal from './Modal';
 
 const DataTable = () => {
   const data = use(fetchData()) as ResponseData;
 
   console.log(data, 'data');
+
+  const [isVisibleModal, setIsVisibleModal] = useState(false);
+
+  const [columns, setColumns] = useState(() => data.columns);
 
   const [year, setYear] = useState(() => data.table[0].data.year);
   const [name, setName] = useState('');
@@ -14,7 +19,7 @@ const DataTable = () => {
   const [selectedSort, setSelectedSort] = useState<SortType | ''>('');
   const [selectedSortOrder, setSelectedSortOrder] = useState<SortOrder>('asc');
 
-  const filterByYear = (data: TableData[]): TableData[] => {
+  const filterByYear = (data: TableData[]) => {
     return data
       .map(({ dataByYears, data }) => {
         const foundItem = dataByYears.find(
@@ -23,18 +28,25 @@ const DataTable = () => {
 
         if (!foundItem) return null;
 
+        const obj = columns.reduce(
+          (acc, current) => {
+            if (current === 'name') acc['name'] = data.name;
+            else if (current === 'iso_code') acc['iso_code'] = data.iso_code;
+            else if (current === 'year') acc['year'] = data.year;
+            else
+              acc[current] =
+                foundItem[current as keyof typeof foundItem] ?? unknownValue;
+            return acc;
+          },
+          {} as Record<string, string | number>
+        );
+
         return {
           dataByYears,
-          data: {
-            ...data,
-            year: foundItem.year,
-            population: foundItem.population ?? unknownValue,
-            co2: foundItem.co2 ?? unknownValue,
-            co2_per_capita: foundItem.co2_per_capita ?? unknownValue,
-          },
+          data: obj,
         };
       })
-      .filter((item) => !!item);
+      .filter((item) => !!item) as TableData[];
   };
 
   const filterByCountryName = (data: TableData[]): TableData[] => {
@@ -64,6 +76,17 @@ const DataTable = () => {
         ? valueBNum - valueANum
         : valueANum - valueBNum;
     });
+  };
+
+  const handleAdditionalColumns = (column: string) => {
+    const foundColumn = columns.find((item) => item === column);
+
+    if (!foundColumn) {
+      setColumns([...columns, column]);
+      return;
+    }
+
+    setColumns(columns.filter((item) => item !== column));
   };
 
   let tableData = filterByYear(data.table);
@@ -99,9 +122,7 @@ const DataTable = () => {
           value={selectedSort}
           onChange={(e) => setSelectedSort(e.target.value as SortType)}
         >
-          <option value="" disabled>
-            Sort type
-          </option>
+          <option value="">Sort type</option>
           {sortType.map((type) => (
             <option key={type} value={type}>
               {type}
@@ -122,12 +143,18 @@ const DataTable = () => {
             </option>
           ))}
         </select>
+        <button
+          className="cursor-pointer underline"
+          onClick={() => setIsVisibleModal(true)}
+        >
+          Add new columns
+        </button>
       </div>
       <div className="overflow-x-auto w-full">
         <table className="border-collapse">
           <thead>
             <tr className="bg-gray-100">
-              {data.columns.map((column) => (
+              {columns.map((column) => (
                 <th key={column} className="border border-gray-300 px-4 py-2">
                   {column}
                 </th>
@@ -138,7 +165,7 @@ const DataTable = () => {
             {tableData.length ? (
               tableData.map((country, index) => (
                 <tr key={index}>
-                  {data.columns.map((column) => (
+                  {columns.map((column) => (
                     <td
                       key={column}
                       className="border border-gray-300 px-4 py-2"
@@ -156,6 +183,25 @@ const DataTable = () => {
           </tbody>
         </table>
       </div>
+      <Modal
+        title="Additional columns"
+        isVisible={isVisibleModal}
+        setIsVisible={setIsVisibleModal}
+      >
+        <div className="flex flex-col gap-2">
+          {data.additionalColumns.map((column) => (
+            <label key={column} className="flex items-center gap-x-1">
+              <input
+                type="checkbox"
+                value={column}
+                checked={!!columns.find((item) => item === column)}
+                onChange={() => handleAdditionalColumns(column)}
+              />
+              {column}
+            </label>
+          ))}
+        </div>
+      </Modal>
     </div>
   );
 };
