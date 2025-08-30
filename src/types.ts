@@ -27,3 +27,6 @@ export type ResponseData = {
   years: number[];
   columns: string[];
 };
+
+export type SortOrder = 'asc' | 'desc';
+export type SortType = 'name' | 'population';
