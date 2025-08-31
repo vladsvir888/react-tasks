@@ -1,5 +1,5 @@
 import { createPortal } from 'react-dom';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import IconClose from './icons/IconClose';
 
 type Props = {
@@ -10,7 +10,7 @@ type Props = {
 };
 
 const Modal = ({ children, title, isVisible, setIsVisible }: Props) => {
-  const close = () => setIsVisible(false);
+  const close = useCallback(() => setIsVisible(false), [setIsVisible]);
 
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {
@@ -23,7 +23,7 @@ const Modal = ({ children, title, isVisible, setIsVisible }: Props) => {
     document.addEventListener('keydown', keyDownHandler);
 
     return () => document.removeEventListener('keydown', keyDownHandler);
-  }, []);
+  }, [close]);
 
   return (
     isVisible &&
