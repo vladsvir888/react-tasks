@@ -1,4 +1,4 @@
-import { use, useCallback, useMemo, useState } from 'react';
+import { use, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { fetchData } from '../api';
 import type { ResponseData, SortOrder, SortType, TableData } from '../types';
 import { sortOrder, sortType, unknownValue } from '../consts';
@@ -16,6 +16,11 @@ const DataTable = () => {
 
   const [selectedSort, setSelectedSort] = useState<SortType | ''>('');
   const [selectedSortOrder, setSelectedSortOrder] = useState<SortOrder>('asc');
+
+  const [highlightedCells, setHighlightedCells] = useState<
+    Record<string, boolean>
+  >({});
+  const prevTableDataRef = useRef<TableData[]>([]);
 
   const filterByYear = useCallback(
     (data: TableData[]) => {
@@ -107,6 +112,39 @@ const DataTable = () => {
     return sortedByNameOrPopulation;
   }, [data.table, filterByYear, filterByCountryName, sortByNameOrPopulation]);
 
+  useEffect(() => {
+    const prevTableData = prevTableDataRef.current;
+    const newHighlightedCells: Record<string, boolean> = {};
+
+    tableData.forEach((country) => {
+      const prevCountry = prevTableData.find(
+        (c) => c.data.name === country.data.name
+      );
+
+      columns.forEach((column) => {
+        const cellKey = `${country.data.name}_${column}`;
+        const prevValue =
+          prevCountry?.data[column as keyof typeof prevCountry.data];
+        const currValue = country.data[column as keyof typeof country.data];
+
+        if (
+          prevValue !== undefined &&
+          currValue !== undefined &&
+          prevValue !== currValue
+        ) {
+          newHighlightedCells[cellKey] = true;
+        }
+      });
+    });
+
+    if (Object.keys(newHighlightedCells).length) {
+      setHighlightedCells(newHighlightedCells);
+      setTimeout(() => setHighlightedCells({}), 500);
+    }
+
+    prevTableDataRef.current = tableData;
+  }, [tableData, columns]);
+
   return (
     <div>
       <div className="mb-2 flex flex-wrap gap-2.5">
@@ -179,14 +217,19 @@ const DataTable = () => {
             {tableData.length ? (
               tableData.map((country) => (
                 <tr key={country.data.name}>
-                  {columns.map((column) => (
-                    <td
-                      key={column}
-                      className="border border-gray-300 px-4 py-2"
-                    >
-                      {country.data[column as keyof typeof country.data]}
-                    </td>
-                  ))}
+                  {columns.map((column) => {
+                    const cellKey = `${country.data.name}_${column}`;
+                    return (
+                      <td
+                        key={column}
+                        className={`border border-gray-300 px-4 py-2 transition-colors duration-500 ${
+                          highlightedCells[cellKey] ? 'bg-yellow-100' : ''
+                        }`}
+                      >
+                        {country.data[column as keyof typeof country.data]}
+                      </td>
+                    );
+                  })}
                 </tr>
               ))
             ) : (
