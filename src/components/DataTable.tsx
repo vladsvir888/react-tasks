@@ -1,4 +1,4 @@
-import { use, useState } from 'react';
+import { use, useCallback, useMemo, useState } from 'react';
 import { fetchData } from '../api';
 import type { ResponseData, SortOrder, SortType, TableData } from '../types';
 import { sortOrder, sortType, unknownValue } from '../consts';
@@ -6,8 +6,6 @@ import Modal from './Modal';
 
 const DataTable = () => {
   const data = use(fetchData()) as ResponseData;
-
-  console.log(data, 'data');
 
   const [isVisibleModal, setIsVisibleModal] = useState(false);
 
@@ -19,79 +17,95 @@ const DataTable = () => {
   const [selectedSort, setSelectedSort] = useState<SortType | ''>('');
   const [selectedSortOrder, setSelectedSortOrder] = useState<SortOrder>('asc');
 
-  const filterByYear = (data: TableData[]) => {
-    return data
-      .map(({ dataByYears, data }) => {
-        const foundItem = dataByYears.find(
-          (yearItem) => yearItem.year === year
-        );
+  const filterByYear = useCallback(
+    (data: TableData[]) => {
+      return data
+        .map(({ dataByYears, data }) => {
+          const foundItem = dataByYears.find(
+            (yearItem) => yearItem.year === year
+          );
 
-        if (!foundItem) return null;
+          if (!foundItem) return null;
 
-        const obj = columns.reduce(
-          (acc, current) => {
-            if (current === 'name') acc['name'] = data.name;
-            else if (current === 'iso_code') acc['iso_code'] = data.iso_code;
-            else if (current === 'year') acc['year'] = data.year;
-            else
-              acc[current] =
-                foundItem[current as keyof typeof foundItem] ?? unknownValue;
-            return acc;
-          },
-          {} as Record<string, string | number>
-        );
+          const updatedData = columns.reduce(
+            (acc, current) => {
+              if (current === 'name') acc['name'] = data.name;
+              else if (current === 'iso_code') acc['iso_code'] = data.iso_code;
+              else
+                acc[current] =
+                  foundItem[current as keyof typeof foundItem] ?? unknownValue;
+              return acc;
+            },
+            {} as Record<string, string | number>
+          );
 
-        return {
-          dataByYears,
-          data: obj,
-        };
-      })
-      .filter((item) => !!item) as TableData[];
-  };
+          return {
+            dataByYears,
+            data: updatedData,
+          };
+        })
+        .filter((item) => !!item) as TableData[];
+    },
+    [columns, year]
+  );
 
-  const filterByCountryName = (data: TableData[]): TableData[] => {
-    return data.filter((item) =>
-      item.data.name.toLowerCase().includes(name.toLowerCase())
-    );
-  };
+  const filterByCountryName = useCallback(
+    (data: TableData[]): TableData[] => {
+      return data.filter((item) =>
+        item.data.name.toLowerCase().includes(name.toLowerCase())
+      );
+    },
+    [name]
+  );
 
-  const sortByNameOrPopulation = (data: TableData[]) => {
-    if (selectedSort === '') return data;
+  const sortByNameOrPopulation = useCallback(
+    (data: TableData[]) => {
+      if (selectedSort === '') return data;
 
-    return data.sort((a, b) => {
-      const valueA = a.data[selectedSort];
-      const valueB = b.data[selectedSort];
+      return data.sort((a, b) => {
+        const valueA = a.data[selectedSort];
+        const valueB = b.data[selectedSort];
 
-      if (selectedSort === 'name') {
+        if (selectedSort === 'name') {
+          return selectedSortOrder === 'desc'
+            ? (valueB as string).localeCompare(valueA as string)
+            : (valueA as string).localeCompare(valueB as string);
+        }
+
+        // population
+        const valueANum = +valueA || 0;
+        const valueBNum = +valueB || 0;
+
         return selectedSortOrder === 'desc'
-          ? (valueB as string).localeCompare(valueA as string)
-          : (valueA as string).localeCompare(valueB as string);
+          ? valueBNum - valueANum
+          : valueANum - valueBNum;
+      });
+    },
+    [selectedSort, selectedSortOrder]
+  );
+
+  const handleAdditionalColumns = useCallback(
+    (column: string) => {
+      const foundColumn = columns.find((item) => item === column);
+
+      if (!foundColumn) {
+        setColumns([...columns, column]);
+        return;
       }
 
-      // population
-      const valueANum = +valueA || 0;
-      const valueBNum = +valueB || 0;
+      setColumns(columns.filter((item) => item !== column));
+    },
+    [columns]
+  );
 
-      return selectedSortOrder === 'desc'
-        ? valueBNum - valueANum
-        : valueANum - valueBNum;
-    });
-  };
-
-  const handleAdditionalColumns = (column: string) => {
-    const foundColumn = columns.find((item) => item === column);
-
-    if (!foundColumn) {
-      setColumns([...columns, column]);
-      return;
-    }
-
-    setColumns(columns.filter((item) => item !== column));
-  };
-
-  let tableData = filterByYear(data.table);
-  tableData = filterByCountryName(tableData);
-  tableData = sortByNameOrPopulation(tableData);
+  const tableData = useMemo(() => {
+    const filteredByYear = filterByYear(data.table);
+    const filteredByCountryName = filterByCountryName(filteredByYear);
+    const sortedByNameOrPopulation = sortByNameOrPopulation(
+      filteredByCountryName
+    );
+    return sortedByNameOrPopulation;
+  }, [data.table, filterByYear, filterByCountryName, sortByNameOrPopulation]);
 
   return (
     <div>
@@ -163,8 +177,8 @@ const DataTable = () => {
           </thead>
           <tbody>
             {tableData.length ? (
-              tableData.map((country, index) => (
-                <tr key={index}>
+              tableData.map((country) => (
+                <tr key={country.data.name}>
                   {columns.map((column) => (
                     <td
                       key={column}
