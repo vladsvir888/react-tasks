@@ -1,0 +1,29 @@
+{
+  "About": {
+    "title": "About me",
+    "text": "Frontend developer | Passionate about tech | currently in Minsk",
+    "course": "course"
+  },
+  "Refresh": "Refresh",
+  "Search": "Search...",
+  "ClearQuery": "Clear query",
+  "Submit": "Submit",
+  "Search results": "Search results",
+  "Prev": "Prev",
+  "Next": "Next",
+  "GoHome": "Go home",
+  "Navigation": {
+    "Home": "Home",
+    "About": "About"
+  },
+  "Unselect all": "Unselect all",
+  "Download": "Download",
+  "Close": "Close",
+  "Gender": "Gender",
+  "Species": "Species",
+  "Status": "Status",
+  "Theme": {
+    "Light": "Light",
+    "Dark": "Dark"
+  }
+}

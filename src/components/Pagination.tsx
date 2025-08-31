@@ -1,15 +1,18 @@
+import { useSearchParams } from 'next/navigation';
 import type { Info } from '../types';
-import { Link, useLocation, useSearchParams } from 'react-router';
+import { Link } from '../i18n/navigation';
+import { useTranslations } from 'next-intl';
 
 const Pagination = ({ prev, next, pages }: Info) => {
-  const { pathname } = useLocation();
-  const [searchParams] = useSearchParams();
+  const t = useTranslations();
+  const searchParams = useSearchParams();
   const pageSearchParam = searchParams.get('page');
+  const detailsSearchParam = searchParams.get('details');
   const page = pageSearchParam ? +pageSearchParam : 1;
 
   const createLink = (link: string) => {
     const url = new URL(link);
-    return `${pathname}${url.search}`;
+    return `${url.search}${detailsSearchParam ? `&details=${detailsSearchParam}` : ''}`;
   };
 
   return (
@@ -17,9 +20,9 @@ const Pagination = ({ prev, next, pages }: Info) => {
       {prev && (
         <Link
           className="cursor-pointer transition hover:text-slate-700 dark:hover:text-gray-300"
-          to={createLink(prev)}
+          href={createLink(prev)}
         >
-          Prev
+          {t('Prev')}
         </Link>
       )}
       <p>
@@ -28,9 +31,9 @@ const Pagination = ({ prev, next, pages }: Info) => {
       {next && (
         <Link
           className="cursor-pointer transition hover:text-slate-700 dark:hover:text-gray-300"
-          to={createLink(next)}
+          href={createLink(next)}
         >
-          Next
+          {t('Next')}
         </Link>
       )}
     </div>

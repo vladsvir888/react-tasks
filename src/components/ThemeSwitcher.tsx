@@ -1,11 +1,15 @@
+'use client';
+
 import { useGetTheme } from '../hooks/useGetTheme';
 import { type Theme } from '../types';
 import { themeList } from '../constants/theme';
 import { useEffect } from 'react';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { cacheKey } from '../utils/local-storage';
+import { useTranslations } from 'next-intl';
 
 const ThemeSwitcher = () => {
+  const t = useTranslations('Theme');
   const { value: themeLS, set: setThemeLS } = useLocalStorage(
     cacheKey.reactCourseTheme
   );
@@ -45,7 +49,7 @@ const ThemeSwitcher = () => {
           className="cursor-pointer py-1 px-2 aria-pressed:bg-slate-800 dark:aria-pressed:bg-white aria-pressed:rounded-lg aria-pressed:text-white dark:aria-pressed:text-black"
           onClick={() => setTheme(item)}
         >
-          {toUpperCaseFirstLetter(item)}
+          {t(toUpperCaseFirstLetter(item))}
         </button>
       ))}
     </div>

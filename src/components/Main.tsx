@@ -1,41 +1,54 @@
+'use client';
+
 import Search from './Search';
 import Results from './Results';
 import Pagination from './Pagination';
-import { useSearchParams } from 'react-router';
+import { useRouter, useSearchParams } from 'next/navigation';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { cacheKey } from '../utils/local-storage';
 import { useEffect } from 'react';
 import { useGetCharacterQuery } from '../store/api';
 import RefreshButton from './RefreshButton';
+import DetailsCardWrapper from './DetailsCardWrapper';
 
 const Main = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const detailsParam = searchParams.get('details');
   const { value: searchQuery } = useLocalStorage(
     cacheKey.reactCourseSearchTerm
   );
 
   useEffect(() => {
-    if (searchQuery && !searchParams.size) {
-      setSearchParams({ name: searchQuery });
+    if (searchQuery && !searchParams?.size) {
+      router.push(`?name=${searchQuery}`);
     }
   }, []);
 
+  const characterQuerySearchParams = new URLSearchParams(searchParams);
+  characterQuerySearchParams.delete('details');
+
   const { data, isFetching, error, refetch } = useGetCharacterQuery(
-    searchParams.toString()
+    characterQuerySearchParams.toString()
   );
 
   return (
-    <div className="main">
-      <div className="mb-2">
-        <RefreshButton refetch={refetch} />
+    <div className="main flex flex-col sm:flex-row gap-2.5 items-start">
+      <div>
+        <div className="mb-2">
+          <RefreshButton refetch={refetch} />
+        </div>
+        <Search />
+        <Results
+          results={data?.results || []}
+          loading={isFetching}
+          error={data?.error || error}
+        />
+        {data?.info && <Pagination {...data.info} />}
       </div>
-      <Search />
-      <Results
-        results={data?.results || []}
-        loading={isFetching}
-        error={data?.error || error}
-      />
-      {data?.info && <Pagination {...data.info} />}
+      {detailsParam && (
+        <DetailsCardWrapper id={detailsParam} searchParams={searchParams} />
+      )}
     </div>
   );
 };
